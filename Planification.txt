@@ -1,0 +1,18 @@
+1) Entrer et lire une requête (AST) N (02/12/2020)
+-Implémenter le système de classes des expressions
+-Choisir une représentation des expressions
+-Implémenter une méthode pour lire les inputs du user, vérifier que la synthaxe est correct
+-Décoder l'input (récurivement) (grâce au design composite)
+-Méthode qui retourne les attributs, arrités, etc).
+
+2) Base de donnée SQL lite P (25/11/2020)
+-Création d'une base de donnée sqlite
+-L'importer et l'utiliser dans du code python
+
+3) Vérifier que les requêtes SPRJRUD sont cohérentes avec la table sur laquelle on les applique ( Type des attributs, nom des attributs, arrités) / Validation, lancement d'erreur. P + N  (06/12/2020)
+-Précondition : Tu connais les attributs, nom d'attributs, arrités, etc).
+
+
+4) Traduction des reqûetes SPJRUD -> SQLite (13/12/2020)
+
+5) Fonctions utilitaires + rédaction du rapport final (18/12/2020)
