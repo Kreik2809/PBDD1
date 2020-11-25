@@ -14,7 +14,9 @@ class Expression():
 
 
 class Operation(Expression):
-    """Modélise une opération avec deux paramètre de type Expression"""
+    """Modélise une opération avec deux paramètre de type Expression
+        Un objet de cette classe ne sera jamais instancié.
+    """
 
     def __init__(self, expr1, expr2):
         self.expr1 = expr1
@@ -28,10 +30,6 @@ class Operation(Expression):
     def compute(self):
         """Calcul de manière récursive le résultat de l'expressions"""
         return self.op(self.expr1.compute(), self.expr2.compute())
-
-    def __str__(self):
-        s = repr(self.expr1) + " " + self.symbol + " " + repr(self.expr2)
-        return s
 
 
 class Attribut(Expression):
