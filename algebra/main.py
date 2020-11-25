@@ -1,5 +1,5 @@
 import Expression as e
-import Operation as o
+import Operations as o
 
 e1 = e.Relation("T1")
 e2 = e.Relation("T2")
