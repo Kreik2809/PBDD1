@@ -1,5 +1,7 @@
 class Expression():
-    """Super classe représentant une expression algébrique"""
+    """
+    Super classe représentant une expression algébrique
+    """
 
     def __init__(self):
         pass
@@ -9,18 +11,22 @@ class Expression():
         pass
     
     def __str__(self):
-        #méthode abstraite définie dans la sous classe Operation
+        #méthode abstraite définie dans les sous classe d'Operation
         pass
 
 
 class Operation(Expression):
-    """Modélise une opération avec deux paramètre de type Expression
-        Un objet de cette classe ne sera jamais instancié.
+    """
+    Modélise une opération avec deux paramètre de type Expression
+    
+    Note:
+    -----
+    -Un objet de cette classe ne sera jamais instancié.
     """
 
-    def __init__(self, expr1, expr2):
-        self.expr1 = expr1
-        self.expr2 = expr2
+    def __init__(self, param1, param2):
+        self.param1 = param1
+        self.param2 = param2
         self.symbol = "?"
 
     def op(self, expr1, expr2):
@@ -29,11 +35,13 @@ class Operation(Expression):
     
     def compute(self):
         """Calcul de manière récursive le résultat de l'expressions"""
-        return self.op(self.expr1.compute(), self.expr2.compute())
-
+        return self.op(self.param1.compute(), self.param2.compute())
+    
 
 class Attribut(Expression):
-    """Modélise un attribut de table dans une base de donnée relationnelle"""
+    """
+    Modélise un attribut d'une table
+    """
 
     def __init__(self, name):
         self.name = name
@@ -43,9 +51,39 @@ class Attribut(Expression):
     
     def __str__(self):
         return self.name
+
+
+class ListeAttribut(Expression):
+    """
+    Modélise une liste d'attributs d'une table
+    
+    Attribut :
+    ----------
+    -liste : Liste 
+        Cette liste contient un ou plusieurs attributs
+    """
+
+    def __init__(self, liste):
+        self.liste = liste
+
+    def compute(self):
+        return self
+    
+    def __str__(self):
+        s = "[ "
+        if (len(self.liste > 1)):
+            for i in range(len(self.liste) - 1):
+                s = s + str(self.liste[i]) + ", "
+        s = s + str(self.liste[-1]) + " ]"
+        return s
+
+
 
 class Relation(Expression):
-    """Modélise une relation d'une base de donnée relationnelle"""
+    """
+    Modélise une relation d'une base de donnée relationnelle
+    
+    """
 
     def __init__(self, name):
         self.name = name
@@ -55,3 +93,18 @@ class Relation(Expression):
     
     def __str__(self):
         return self.name
+
+class Cst(Expression):
+    """
+    Modélise une constante utilisable dans une expression SPJRUD
+    
+    """
+
+    def __init__(self, valeur):
+        self.valeur = valeur
+    
+    def compute(self):
+        return self.valeur
+    
+    def __str__(self):
+        return str(self.valeur)

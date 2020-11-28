@@ -1,5 +1,5 @@
 1) Entrer et lire une requête (AST) N (02/12/2020)
--Implémenter le système de classes des expressions
+-Implémenter le système de classes des expressions 
 -Choisir une représentation des expressions
 -Implémenter une méthode pour lire les inputs du user, vérifier que la synthaxe est correct
 -Décoder l'input (récurivement) (grâce au design composite)
