@@ -24,11 +24,6 @@ class Selection(Expression.Operation):
         s = "sélection : " + str(param1) + " = " + str(self.attr) + " sur la relation : " + str(param2)
         return s
     
-    def addExpr(self, expression):
-        if (self.param2 == None):
-            self.param2 = expression
-        else:
-            self.param2.addExpr(expression)
 
     def __str__(self):
         s = "[ " + self.symbol + " ( " + str(self.param1) + " = " + str(self.attr) + " ) " + str(self.param2) + " ]"
@@ -58,12 +53,6 @@ class Proj(Expression.Operation):
             s = s + str(elem) + ", "
         s = s + " sur la relation : " + str(param2)
         return s
-
-    def addExpr(self, expression):
-        if (self.param2 == None):
-            self.param2 = expression
-        else:
-            self.param2.addExpr(expression)
     
     def __str__(self):
         s = "[ " + self.symbol + "( "
@@ -93,12 +82,6 @@ class Join(Expression.Operation):
     def op(self, param1, param2):
         s = "jointure de la relation " + str(param1) + " sur la relation " + str(param2)
         return s
-
-    def addExpr(self, expression):
-        if (self.param2 == None):
-            self.param2 = expression
-        else:
-            self.param2.addExpr(expression)
             
     def __str__(self):
         s = "[ "+ str(self.param1) + " x " + str(self.param2) + " ]"

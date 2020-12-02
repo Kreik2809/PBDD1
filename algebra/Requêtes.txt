@@ -1,0 +1,16 @@
+Select(attr1,attr2,Rel(name))
+Proj([attr1,attr2],Rel(name))
+Join(Rel(name1);Rel(name2))
+Proj([attr1,attr2],Join(Rel(name1);Select(attr1,attr2,Rel(name))))
+
+Union(Rel(name1);Rel(name2))
+
+Diff(Rel(name1);Rel(name2))
+
+Rename(newAttr,attr,Rel(Cities))
+
+Q27)
+Proj([ville],Select(année2,année,Join(Rename(année2,année,Rel(villes));Rel(villes)))))
+
+Q28)
+Diff(Proj([athlète],Rel(Nat);Proj([athlète],Select(pays,pays2,Join(Rename(année2,année,Rename(pays2,pays,Rel(Nat)));Rel(Nat))))))

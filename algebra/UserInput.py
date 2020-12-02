@@ -8,11 +8,36 @@ def readInput():
     s = input("Veuillez entrer votre requête SPJRUD : ")
     return s
 
+
+def analyseRel(text, count):
+    """
+    Cette fonction permet d'analyse de manière générale le nom d'une relation.
+    Retourne le nom de la relation (rName : String)
+    ------------
+    """
+    count += 4
+    rName = ""
+    while(text[count]!=")"):
+        rName += text[count]
+        count += 1
+    return rName
+
+def analyseAttr(text, count):
+    """
+    Cette fonction permet d'analyser de manière générale le nom d'un attribut
+    Retourne le nom de l'attribut ( : String), et l'endroit où l'analyse s'est arrêtée
+    """
+    aName = ""
+    while(text[count] != ","):
+        aName += text[count]
+        count += 1
+    return aName, count
+
 def analyseSelect(text, expression, count, flag):
     """
     Analyse une opération de Sélection entrée au clavier.
     Syntaxe attendue : 
-        -exemple1 : Select(attr1,Cst(*value*),Rel(name))
+        -exemple1 : Select(attr1,Cst(value),Rel(name))
         -exemple2 : Select(attr1,attr2,Rel(name))
         Note : Pas d'espace, pas de guillemets, 'Cst' est un mot réservé.
                Une Cst peut être soit un chaîne de caractère, soit un nombre
@@ -25,11 +50,9 @@ def analyseSelect(text, expression, count, flag):
     currentExpression = o.Selection(param1, attr, param2)
     #On analyse le param1 (L'attribut que l'on sélectionne)
     count += 1
-    nParam1 = ""
-    while(text[count] != ","):
-        nParam1 += text[count]
-        count += 1
-    currentExpression.param1 = e.Attribut(nParam1)
+    attr, j = analyseAttr(text,count)
+    count = j
+    currentExpression.param1 = e.Attribut(attr)
     #On analyse attr (Le deuxième élément de l'égalité)
     count += 1
     if(text[count : count +3] == "Cst"):
@@ -46,23 +69,15 @@ def analyseSelect(text, expression, count, flag):
         count += 1
     else:
         #On égalise avec un attribut
-        nAttr =""
-        while(text[count] != ","):
-            nAttr += text[count]
-            count += 1
-        currentExpression.attr = e.Attribut(nAttr)
+        attr, j = analyseAttr(text,count)
+        count = j
+        currentExpression.attr = e.Attribut(attr)
     #On analyse param2 (La relation ou l'expression sur laquelle on applique cette sélection)
     count += 1
     if(text[count:count+3] == "Rel"):
         #C'est une relation, l'expression est donc complète
         flag[-1] = True
-        rName = ""
-        i = count
-        i = i + 4
-        while (text[i] != ")"):
-            rName += text[i]
-            i += 1
-        currentExpression.param2=(e.Relation(rName))
+        currentExpression.param2=(e.Relation(analyseRel(text, count)))
     else:
         flag[-1] = False
 
@@ -89,7 +104,7 @@ def analyseProj(text, expression, count, flag):
     listAttr = e.ListeAttribut([])
     param2 = None
     currentExpression = o.Proj(listAttr, param2)
-    #On analyse les attributs
+    #On analyse la liste d'attributs
     count += 2 
     endAttr = count
     while (text[endAttr] != ']'):
@@ -106,13 +121,7 @@ def analyseProj(text, expression, count, flag):
     if(text[count:count+3] == "Rel"):
         #C'est une relation, l'expression est donc complète
         flag[-1] = True
-        rName = ""
-        i = count
-        i = i + 4
-        while (text[i] != ")"):
-            rName += text[i]
-            i += 1
-        currentExpression.param2=(e.Relation(rName))
+        currentExpression.param2=(e.Relation(analyseRel(text, count)))
     else:
         flag[-1] = False
 
@@ -126,49 +135,50 @@ def analyseProj(text, expression, count, flag):
         return expression, flag, count
 
 
-def analyseJoin(text, expression, count, flag):
+def analyseJUD(text, expression, count, flag, OP):
     """
     Analyse une opération de jointure entrée au clavier.
+    Le paramètre OP spécifie le type de l'Opération à créer:
+        1) OP = "J" => Join
+        2) OP = "U" => Union
+        ") OP = "D" => Diff 
     Syntaxe attendue : 
-        -exemple1 : Join(Rel(*name*);Rel(*name*))
-        -exemple2 : Join(*Expr*;*Expr)
+        -exemple1 : Join(Rel(name);Rel(name))
+        -exemple2 : Join(*expr1*;*expre2*)
+        -exemple3 : Union(*expr1*;*expre2*)
+        -exemple4 : Diff(*expr1*;*expre2*)
+        Note : expr1 et expr2 sont des expressions SPJRUD entrée au clavier en respectant la syntaxe.
     """
     flag.append(False)
     param1 = None
     param2 = None
-    currentExpression = o.Join(param1,param2)
+    if(OP == "J"):
+        currentExpression = o.Join(param1,param2)
+    elif (OP == "U"):
+        currentExpression = o.Union(param1,param2)
+    elif (OP == "D"):
+        currentExpression = o.Diff(param1,param2)
     #On analyse le param1
     count += 1
+    i = count
+    while(text[i] != ";"): #On calcule l'index du début du param2
+        i += 1
     if(text[count:count+3] == "Rel"):
-        count += 4
-        rName = ""
-        while(text[count]!=")"):
-            rName += text[count]
-            count += 1
-        currentExpression.param1 = e.Relation(rName)
-        rName = ""
+        currentExpression.param1=(e.Relation(analyseRel(text, count)))
         count+=1
     else:
         tempExpr = None
         tempf = []
-        i = count
-        while(text[i] != ";"):
-            i += 1
         #On effectue une seconde récursion pour déterminer le premier paramètre
         tempExpr = analyseInput(text, tempExpr, count, tempf)
         currentExpression.param1 = tempExpr
-        count = i
+
     #On analyse le param2
+    count = i
     count += 1
     if(text[count:count+3] == "Rel"):
-        print("hey")
         flag[-1] = True
-        count += 4
-        rName = ""
-        while(text[count]!=")"):
-            rName += text[count]
-            count += 1
-        currentExpression.param2 = e.Relation(rName)
+        currentExpression.param2=(e.Relation(analyseRel(text, count)))
     else:
         flag[-1] = False
     
@@ -183,13 +193,43 @@ def analyseJoin(text, expression, count, flag):
         
 
 def analyseRename(text, expression, count,flag):
-    pass
+    """
+    Analyse une opération de Renommage entrée au clavier.
+    Syntaxe attendue : 
+        -exemple1 : Rename(newName,oldName,Rel(name))
+    """
+    flag.append(False)
+    newAttr = None
+    param1 = None
+    param2 = None
+    currentExpression = o.Rename(newAttr, param1, param2)
+    #On analyse newAttr
+    count += 1
+    nAttr, j = analyseAttr(text, count)
+    currentExpression.newAttr = e.Attribut(nAttr)
+    count = j
+    #On analyse le param1
+    count += 1
+    nParam1, j = analyseAttr(text, count)
+    currentExpression.param1 = e.Attribut(nParam1)
+    count = j
+    #On analyse le param2
+    count += 1
+    if(text[count:count+3] == "Rel"):
+        flag[-1] = True
+        currentExpression.param2=(e.Relation(analyseRel(text, count)))
+    else:
+        flag[-1] = False
+    
+    if (expression != None):
+        #Ce n'est pas la première opération de l'expression : On ajoute l'opération à l'expression existante
+        expression.addExpr(currentExpression)
+        return expression, flag, count
+    else:
+        #C'est la première opération de l'expression 
+        expression = currentExpression
+        return expression, flag, count
 
-def analyseUnion(text, expression, count, flag):
-    pass
-
-def analyseDiff(text, expression, count, flag):
-    pass
 
 
 def analyseInput(text,expression, count, flag):
@@ -226,7 +266,16 @@ def analyseInput(text,expression, count, flag):
             expr, f, c = analyseSelect(text, expression, count, flag)
             return analyseInput(text, expr, c, f)
         elif (op == "Join"):
-            expr, f, c = analyseJoin(text, expression, count, flag)
+            expr, f, c = analyseJUD(text, expression, count, flag, "J")
+            return analyseInput(text, expr, c, f)
+        elif (op == "Rename"):
+            expr, f, c = analyseRename(text, expression, count, flag)
+            return analyseInput(text, expr, c, f)
+        elif (op == "Union"):
+            expr, f, c = analyseJUD(text, expression, count, flag, "U")
+            return analyseInput(text, expr, c, f)
+        elif (op == "Diff"):
+            expr, f, c = analyseJUD(text, expression, count, flag, "D")
             return analyseInput(text, expr, c, f)
 
            

@@ -57,6 +57,12 @@ class Operation(Expression):
     def op(self, expr1, expr2):
         #la méthode op est définie dans les sous classe modélisant des opérations concrètes
         return 0
+
+    def addExpr(self, expression):
+        if (self.param2 == None):
+            self.param2 = expression
+        else:
+            self.param2.addExpr(expression)
     
     def compute(self):
         """Calcul de manière récursive le résultat de l'expressions"""
