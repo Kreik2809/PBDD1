@@ -1,10 +1,6 @@
 """
 Exemple d'utilisation du package algebra pour créer en python des requêtes SPJRUD
-A venir:
-    -système de lecture des entrées de l'utilisateur
-    -système de récupération de l'entièreté de l'expression dans une forme facile à décoder et à analyser
-    -OPTIONNEL:
-        -Vérification de la cohérence de l'expression SPJRUD : --> Visitor pattern ?
+
 
 if __name__ == "__main__":
     r1 = Relation("Cities")
