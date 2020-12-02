@@ -7,7 +7,7 @@ class Selection(Expression.Operation):
     Attributs :
     -----------
     -param1 : Attribut
-        L'attribut sur lequel on fait la sélection
+        L'attribut que l'on sélectionne
     -attr : Attribut OU Cst
         L'attribut ou la constante que l'on utilise pour l'égalité de la sélection
     -param2 : Expression
@@ -21,9 +21,15 @@ class Selection(Expression.Operation):
         self.symbol = "σ"
     
     def op(self, param1, param2):
-        s = "On effectue la sélection : " + str(param1) + " = " + str(self.attr) + " sur la relation : " + str(param2)
+        s = "sélection : " + str(param1) + " = " + str(self.attr) + " sur la relation : " + str(param2)
         return s
     
+    def addExpr(self, expression):
+        if (self.param2 == None):
+            self.param2 = expression
+        else:
+            self.param2.addExpr(expression)
+
     def __str__(self):
         s = "[ " + self.symbol + " ( " + str(self.param1) + " = " + str(self.attr) + " ) " + str(self.param2) + " ]"
         return s
@@ -47,11 +53,17 @@ class Proj(Expression.Operation):
         self.symbol = "π"
     
     def op(self, param1, param2):
-        s = "on effectue la projection de : "
+        s = "projection de : "
         for elem in param1.liste:
             s = s + str(elem) + ", "
         s = s + " sur la relation : " + str(param2)
         return s
+
+    def addExpr(self, expression):
+        if (self.param2 == None):
+            self.param2 = expression
+        else:
+            self.param2.addExpr(expression)
     
     def __str__(self):
         s = "[ " + self.symbol + "( "
@@ -79,10 +91,15 @@ class Join(Expression.Operation):
         self.symbol = "x"
     
     def op(self, param1, param2):
-        s = "On effectue la jointure de la relation " + str(param1) + " sur la relation " + str(param2)
+        s = "jointure de la relation " + str(param1) + " sur la relation " + str(param2)
         return s
 
-    
+    def addExpr(self, expression):
+        if (self.param2 == None):
+            self.param2 = expression
+        else:
+            self.param2.addExpr(expression)
+            
     def __str__(self):
         s = "[ "+ str(self.param1) + " x " + str(self.param2) + " ]"
         return s
@@ -133,7 +150,7 @@ class Union(Expression.Operation):
         self.symbol = "U"
     
     def op(self, param1, param2):
-        s = "on effectue l'union des relations : " + str(param1) + " et " + str(param2)
+        s = "l'union des relations : " + str(param1) + " et " + str(param2)
         return s
     
     def __str__(self):
@@ -158,7 +175,7 @@ class Diff(Expression.Operation):
         self.symbol = "-"
 
     def op(self, param1, param2):
-        s = "on effectue la différence des relations : " + str(param1) + " et " + str(param2)
+        s = "la différence des relations : " + str(param1) + " et " + str(param2)
         return s
     
     def __str__(self):

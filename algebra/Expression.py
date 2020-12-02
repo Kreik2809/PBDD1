@@ -1,3 +1,32 @@
+"""
+Exemple d'utilisation du package algebra pour créer en python des requêtes SPJRUD
+A venir:
+    -système de lecture des entrées de l'utilisateur
+    -système de récupération de l'entièreté de l'expression dans une forme facile à décoder et à analyser
+    -OPTIONNEL:
+        -Vérification de la cohérence de l'expression SPJRUD : --> Visitor pattern ?
+
+if __name__ == "__main__":
+    r1 = Relation("Cities")
+    r2 = Relation("CC")
+
+    a1 = Attribut("Population")
+    a2 = Attribut("Name")
+    a3 = Attribut("Capital")
+    a4 = Attribut("Country")
+
+    s1 = o.Selection(a4, Cst("Mali"), r2)
+    r1 = o.Rename(a2, a3, r1)
+    j1 = o.Join(r1, s1)
+
+    listeAttr = ListeAttribut([a1])
+
+    p1 = o.Proj(listeAttr, j1)
+
+    print(p1)
+    print(p1.compute())
+"""
+
 class Expression():
     """
     Super classe représentant une expression algébrique
@@ -12,7 +41,7 @@ class Expression():
     
     def __str__(self):
         #méthode abstraite définie dans les sous classe d'Operation
-        pass
+        return ""
 
 
 class Operation(Expression):
@@ -108,3 +137,4 @@ class Cst(Expression):
     
     def __str__(self):
         return str(self.valeur)
+
