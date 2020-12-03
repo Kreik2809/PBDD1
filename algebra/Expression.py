@@ -55,7 +55,6 @@ class Operation(Expr):
         self.param1 = param1
         self.param2 = param2
         self.symbol = "?"
-        self.nbreJUD = 0
 
     def op(self, expr1, expr2):
         #la méthode op est définie dans les sous classe modélisant des opérations concrètes

@@ -204,12 +204,10 @@ def analyseJUD(text, expression, count, flag, OP, c):
     if (expression != None):
         #Ce n'est pas la première opération de l'expression : On ajoute l'opération à l'expression existante
         expression.addExpr(currentExpression)
-        expression.nbreJUD += 1
         return expression, flag, count
     else:
         #C'est la première opération de l'expression 
         expression = currentExpression
-        expression.nbreJUD += 1
         return expression, flag, count
         
 

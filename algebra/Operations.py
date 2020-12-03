@@ -19,7 +19,6 @@ class Selection(Expression.Operation):
         self.attr = attr
         self.param2 = param2
         self.symbol = "σ"
-        self.nbreJUD = 0
     
     def op(self, param1, param2):
         pass
@@ -46,7 +45,6 @@ class Proj(Expression.Operation):
         self.param1 = param1
         self.param2 = param2
         self.symbol = "π"
-        self.nbreJUD = 0
     
     def op(self, param1, param2):
         s = "projection de : "
@@ -79,7 +77,6 @@ class Join(Expression.Operation):
         self.param1 = param1
         self.param2 = param2
         self.symbol = "x"
-        self.nbreJUD = 0
     
     def op(self, param1, param2):
         s = "jointure de la relation " + str(param1) + " sur la relation " + str(param2)
@@ -108,7 +105,7 @@ class Rename(Expression.Operation):
         self.param1 = param1
         self.param2 = param2
         self.symbol = "φ"
-        self.nbreJUD = 0    
+
     def op(self, param1, param2):
         s = "on renomme : " + str(param1) + " de la relation : " + str(param2) + " en : " + str(self.newAttr)
         return s
@@ -134,7 +131,6 @@ class Union(Expression.Operation):
         self.param2 = param2
         self.c = c
         self.symbol = "U"
-        self.nbreJUD = 0
     
     def op(self, param1, param2):
         #print(param1.getCol(self.c))
@@ -165,7 +161,6 @@ class Diff(Expression.Operation):
         self.param1 = param1
         self.param2 = param2
         self.symbol = "-"
-        self.nbreJUD = 0
 
     def op(self, param1, param2):
         s = "la différence des relations : " + str(param1) + " et " + str(param2)
