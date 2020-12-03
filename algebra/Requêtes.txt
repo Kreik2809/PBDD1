@@ -14,3 +14,6 @@ Proj([ville],Select(année2,année,Join(Rename(année2,année,Rel(villes));Rel(v
 
 Q28)
 Diff(Proj([athlète],Rel(Nat);Proj([athlète],Select(pays,pays2,Join(Rename(année2,année,Rename(pays2,pays,Rel(Nat)));Rel(Nat))))))
+
+
+Union(Union(Union(Rel(Cities);Rel(Countries));Rel(Nam));Rel(PL)))

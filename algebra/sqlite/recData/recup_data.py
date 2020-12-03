@@ -1,13 +1,7 @@
 import sqlite3
 from sqlite3.dbapi2 import Error
 
-#Connexion à la base de donnée et initialisation du curseur pour exécuter les commandes
-
-conn = sqlite3.connect('../ourdatabaseCars.db')
-#conn.row_factory = sqlite3.Row
-c = conn.cursor()
-
-def getColAndTypes(table):
+def getColAndTypes(table, c):
     """
     Récupère les attributs et types d attributs d une table SQLite
 
@@ -47,7 +41,7 @@ def getColAndTypes(table):
 
     return listes2
 
-def getTableAr(table):
+def getTableAr(table, c):
     """
     Récupère l arrité d une table
 
@@ -63,9 +57,9 @@ def getTableAr(table):
     ------
         - Lance une erreur si la table n existe pas et retourne 0.
     """
-    return len(getColAndTypes(table))
+    return len(getColAndTypes(table, c))
 
-def selectSql(attrs, table, where):
+def selectSql(attrs, table, where, c):
     """
     Exécute une requête SELECT sur une BDD SQLite
 
@@ -95,11 +89,11 @@ def selectSql(attrs, table, where):
         if len(where) != 0:
             req += " WHERE " + where
         c.execute(req).fetchall()
-        return req
+        return c.execute(req).fetchall()
     except sqlite3.Error as e:
         print("Erreur :\nMéthode selectSql non-exécutée car :\n",e)
 
-def insertSql(table, values):
+def insertSql(table, values, c):
     """
     Exécute une requête INSERT INTO sur une BDD SQLite
 
@@ -129,7 +123,7 @@ def insertSql(table, values):
     except sqlite3.Error as e:
         print("Erreur :\nMéthode insertSql non-exécutée car :\n",e)
 
-def modifAttr(table, instruction, props):
+def modifAttr(table, instruction, props, c):
     """
     Exécute une requête ALTER TABLE sur une BDD SQLite
 
@@ -156,7 +150,7 @@ def modifAttr(table, instruction, props):
     except sqlite3.Error as e:
         print("Erreur :\nMéthode modifAttr non-exécutée car :\n",e)
 
-def createTempAs(name, select):
+def createTempAs(name, select, c):
     """
     Permet de créer une table temporaire sur une BDD (avec AS)
 
@@ -179,7 +173,7 @@ def createTempAs(name, select):
     except sqlite3.Error as e:
         print("Erreur :\nMéthode createTempAs non-exécutée car :\n",e)
 
-def createTempBasic(name, attrList):
+def createTempBasic(name, attrList, c):
     """
     Permet de créer une table temporaire sur une BDD (sans AS)
 
@@ -210,17 +204,27 @@ def createTempBasic(name, attrList):
     except sqlite3.Error as e:
         print("Erreur :\nMéthode createTempBasic non-exécutée car :\n",e)
 
-#print(getColAndTypes("dataVoit"))
-#print(getTableAr("dataVoit"))
-#print(insertSql("dataVoit", ["8", "Citroen", "Noire", "2015"]))
 
-#a = selectSql(["voiture", "couleur", "idVoit", "annee"], "dataVoit", "")
-#print(createTempAs("tempotable", a))
-#print(getColAndTypes("tempotable"))
+if __name__=="__main__":
+    #Connexion à la base de donnée et initialisation du curseur pour exécuter les commandes
 
-#print(modifAttr("dataVoit", "rename column", "id to idVoit"))
+    conn = sqlite3.connect('../database.db')
+    #conn.row_factory = sqlite3.Row
+    c = conn.cursor()
 
-#print(createTempBasic("tableTest", ["attri1 text", "attri2 int"]))
-#print(getColAndTypes("tableTest"))
+    #print(getColAndTypes("dataVoit"))
+    #print(getTableAr("dataVoit"))
+    #print(insertSql("dataVoit", ["8", "Citroen", "Noire", "2015"]))
 
-conn.close()
+    #a = selectSql(["voiture", "couleur", "idVoit", "annee"], "dataVoit", "")
+    #print(createTempAs("tempotable", a))
+    #print(getColAndTypes("tempotable"))
+
+    #print(modifAttr("dataVoit", "rename column", "id to idVoit"))
+
+    #print(createTempBasic("tableTest", ["attri1 text", "attri2 int"]))
+    #print(getColAndTypes("tableTest"))
+
+    print(selectSql(["*"],"Countries", [], c))
+
+    conn.close()

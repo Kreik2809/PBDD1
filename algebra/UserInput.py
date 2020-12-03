@@ -33,7 +33,27 @@ def analyseAttr(text, count):
         count += 1
     return aName, count
 
-def analyseSelect(text, expression, count, flag):
+def analyseLen(text, count):
+    """
+    Cette fonction permet retourner la taille du premier paramètre d'une expression JUD en prenant compte des potentiels autres opérations
+    JUD qui la composent.
+    """
+    startCount = count
+    nbreJUD = 1
+    x = 0
+    while(x < nbreJUD):
+        if text[count] == ";":
+            x += 1
+        if text[count:count+5] == "Union":
+            nbreJUD += 1
+        elif text[count:count+5] == "Diff" or text[count:count+4] == "Join":
+            nbreJUD += 1
+        count += 1
+    l = count - startCount
+    return l-1
+
+
+def analyseSelect(text, expression, count, flag, c):
     """
     Analyse une opération de Sélection entrée au clavier.
     Syntaxe attendue : 
@@ -77,7 +97,7 @@ def analyseSelect(text, expression, count, flag):
     if(text[count:count+3] == "Rel"):
         #C'est une relation, l'expression est donc complète
         flag[-1] = True
-        currentExpression.param2=(e.Relation(analyseRel(text, count)))
+        currentExpression.param2=(e.Relation(analyseRel(text, count), c))
     else:
         flag[-1] = False
 
@@ -92,7 +112,7 @@ def analyseSelect(text, expression, count, flag):
 
 
 
-def analyseProj(text, expression, count, flag):
+def analyseProj(text, expression, count, flag, c):
     """
     Analyse une opération de Projection entrée au clavier.
     Syntaxe attendue : 
@@ -121,7 +141,7 @@ def analyseProj(text, expression, count, flag):
     if(text[count:count+3] == "Rel"):
         #C'est une relation, l'expression est donc complète
         flag[-1] = True
-        currentExpression.param2=(e.Relation(analyseRel(text, count)))
+        currentExpression.param2=(e.Relation(analyseRel(text, count), c))
     else:
         flag[-1] = False
 
@@ -134,8 +154,7 @@ def analyseProj(text, expression, count, flag):
         expression = currentExpression
         return expression, flag, count
 
-
-def analyseJUD(text, expression, count, flag, OP):
+def analyseJUD(text, expression, count, flag, OP, c):
     """
     Analyse une opération de jointure entrée au clavier.
     Le paramètre OP spécifie le type de l'Opération à créer:
@@ -155,44 +174,46 @@ def analyseJUD(text, expression, count, flag, OP):
     if(OP == "J"):
         currentExpression = o.Join(param1,param2)
     elif (OP == "U"):
-        currentExpression = o.Union(param1,param2)
+        currentExpression = o.Union(param1,param2, c)
     elif (OP == "D"):
         currentExpression = o.Diff(param1,param2)
     #On analyse le param1
     count += 1
-    i = count
-    while(text[i] != ";"): #On calcule l'index du début du param2
-        i += 1
     if(text[count:count+3] == "Rel"):
-        currentExpression.param1=(e.Relation(analyseRel(text, count)))
-        count+=1
+        currentExpression.param1=(e.Relation(analyseRel(text, count), c))
+        while(text[count] != ";"):
+            count += 1
     else:
         tempExpr = None
         tempf = []
         #On effectue une seconde récursion pour déterminer le premier paramètre
-        tempExpr = analyseInput(text, tempExpr, count, tempf)
+        l = analyseLen(text, count)
+        print(l)
+        tempExpr = analyseInput(text, tempExpr, count, tempf, c)
         currentExpression.param1 = tempExpr
-
+        #On calcule l'indice de début du param2
+        count += l
     #On analyse le param2
-    count = i
     count += 1
     if(text[count:count+3] == "Rel"):
         flag[-1] = True
-        currentExpression.param2=(e.Relation(analyseRel(text, count)))
+        currentExpression.param2=(e.Relation(analyseRel(text, count), c))
     else:
         flag[-1] = False
     
     if (expression != None):
         #Ce n'est pas la première opération de l'expression : On ajoute l'opération à l'expression existante
         expression.addExpr(currentExpression)
+        expression.nbreJUD += 1
         return expression, flag, count
     else:
         #C'est la première opération de l'expression 
         expression = currentExpression
+        expression.nbreJUD += 1
         return expression, flag, count
         
 
-def analyseRename(text, expression, count,flag):
+def analyseRename(text, expression, count,flag, c):
     """
     Analyse une opération de Renommage entrée au clavier.
     Syntaxe attendue : 
@@ -217,7 +238,7 @@ def analyseRename(text, expression, count,flag):
     count += 1
     if(text[count:count+3] == "Rel"):
         flag[-1] = True
-        currentExpression.param2=(e.Relation(analyseRel(text, count)))
+        currentExpression.param2=(e.Relation(analyseRel(text, count), c))
     else:
         flag[-1] = False
     
@@ -232,7 +253,7 @@ def analyseRename(text, expression, count,flag):
 
 
 
-def analyseInput(text,expression, count, flag):
+def analyseInput(text,expression, count, flag, cursor):
     """
     Analyse récurcivement l'expression sous forme de String passée en paramètre et retourne l'expression de type Expression
 
@@ -250,6 +271,8 @@ def analyseInput(text,expression, count, flag):
         Un tableau de booléen représentant le fait que l'expression est considérée comme finie ou non.
         Si le dernier élément du tableau est True, alors l'expression est finie et on entre dans le cas de base de la récursion
         Sinon, on continue à analyser l'expression
+    -cursor : Cursor
+        Le curseur sur la base de donnée à laquelle on applique l'expression
     """
     if (len(flag)!= 0 and flag[-1] == True):
         return expression
@@ -260,30 +283,30 @@ def analyseInput(text,expression, count, flag):
             op += text[count]
             count += 1 
         if (op == "Proj"):
-            expr, f, c = analyseProj(text, expression, count, flag)
-            return analyseInput(text,expr, c, f)
+            expr, f, c = analyseProj(text, expression, count, flag, cursor)
+            return analyseInput(text,expr, c, f, cursor)
         elif (op == "Select"):
-            expr, f, c = analyseSelect(text, expression, count, flag)
-            return analyseInput(text, expr, c, f)
+            expr, f, c = analyseSelect(text, expression, count, flag, cursor)
+            return analyseInput(text, expr, c, f, cursor)
         elif (op == "Join"):
-            expr, f, c = analyseJUD(text, expression, count, flag, "J")
-            return analyseInput(text, expr, c, f)
+            expr, f, c = analyseJUD(text, expression, count, flag, "J", cursor)
+            return analyseInput(text, expr, c, f, cursor)
         elif (op == "Rename"):
-            expr, f, c = analyseRename(text, expression, count, flag)
-            return analyseInput(text, expr, c, f)
+            expr, f, c = analyseRename(text, expression, count, flag, cursor)
+            return analyseInput(text, expr, c, f, cursor)
         elif (op == "Union"):
-            expr, f, c = analyseJUD(text, expression, count, flag, "U")
-            return analyseInput(text, expr, c, f)
+            expr, f, c = analyseJUD(text, expression, count, flag, "U", cursor)
+            return analyseInput(text, expr, c, f, cursor)
         elif (op == "Diff"):
-            expr, f, c = analyseJUD(text, expression, count, flag, "D")
-            return analyseInput(text, expr, c, f)
+            expr, f, c = analyseJUD(text, expression, count, flag, "D", cursor)
+            return analyseInput(text, expr, c, f, cursor)
 
            
 if __name__ == "__main__":
     s = readInput()
     expression = None
     flag = []
-    res = analyseInput(s, expression, 0, flag)
+    #res = analyseInput(s, expression, 0, flag)
     print(res)
     print(res.compute())
     

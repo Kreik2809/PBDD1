@@ -19,10 +19,10 @@ class Selection(Expression.Operation):
         self.attr = attr
         self.param2 = param2
         self.symbol = "σ"
+        self.nbreJUD = 0
     
     def op(self, param1, param2):
-        s = "sélection : " + str(param1) + " = " + str(self.attr) + " sur la relation : " + str(param2)
-        return s
+        pass
     
 
     def __str__(self):
@@ -46,6 +46,7 @@ class Proj(Expression.Operation):
         self.param1 = param1
         self.param2 = param2
         self.symbol = "π"
+        self.nbreJUD = 0
     
     def op(self, param1, param2):
         s = "projection de : "
@@ -78,6 +79,7 @@ class Join(Expression.Operation):
         self.param1 = param1
         self.param2 = param2
         self.symbol = "x"
+        self.nbreJUD = 0
     
     def op(self, param1, param2):
         s = "jointure de la relation " + str(param1) + " sur la relation " + str(param2)
@@ -106,7 +108,7 @@ class Rename(Expression.Operation):
         self.param1 = param1
         self.param2 = param2
         self.symbol = "φ"
-    
+        self.nbreJUD = 0    
     def op(self, param1, param2):
         s = "on renomme : " + str(param1) + " de la relation : " + str(param2) + " en : " + str(self.newAttr)
         return s
@@ -127,14 +129,21 @@ class Union(Expression.Operation):
         La deuxième relation de l'union
     """
     
-    def __init__(self, param1, param2):
+    def __init__(self, param1, param2, c):
         self.param1 = param1
         self.param2 = param2
+        self.c = c
         self.symbol = "U"
+        self.nbreJUD = 0
     
     def op(self, param1, param2):
-        s = "l'union des relations : " + str(param1) + " et " + str(param2)
-        return s
+        #print(param1.getCol(self.c))
+        #print(param2.getCol(self.c))
+        pass
+    
+    def getCol(self, c):
+        #print("getCol Union")
+        pass
     
     def __str__(self):
         s = "[ " +str(self.param1) + " " + self.symbol + " " + str(self.param2) + " ]"
@@ -156,6 +165,7 @@ class Diff(Expression.Operation):
         self.param1 = param1
         self.param2 = param2
         self.symbol = "-"
+        self.nbreJUD = 0
 
     def op(self, param1, param2):
         s = "la différence des relations : " + str(param1) + " et " + str(param2)

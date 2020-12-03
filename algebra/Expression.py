@@ -1,3 +1,4 @@
+import sqlite.recData.recup_data as rd
 """
 Exemple d'utilisation du package algebra pour créer en python des requêtes SPJRUD
 
@@ -23,7 +24,7 @@ if __name__ == "__main__":
     print(p1.compute())
 """
 
-class Expression():
+class Expr():
     """
     Super classe représentant une expression algébrique
     """
@@ -40,19 +41,21 @@ class Expression():
         return ""
 
 
-class Operation(Expression):
+class Operation(Expr):
     """
     Modélise une opération avec deux paramètre de type Expression
     
     Note:
     -----
     -Un objet de cette classe ne sera jamais instancié.
+    -nbreJUD est un nombre temporaire que l'on incrémente afin de calculuer l'index du début du param2 dans une expression J/U/D
     """
 
     def __init__(self, param1, param2):
         self.param1 = param1
         self.param2 = param2
         self.symbol = "?"
+        self.nbreJUD = 0
 
     def op(self, expr1, expr2):
         #la méthode op est définie dans les sous classe modélisant des opérations concrètes
@@ -69,7 +72,7 @@ class Operation(Expression):
         return self.op(self.param1.compute(), self.param2.compute())
     
 
-class Attribut(Expression):
+class Attribut(Expr):
     """
     Modélise un attribut d'une table
     """
@@ -84,7 +87,7 @@ class Attribut(Expression):
         return self.name
 
 
-class ListeAttribut(Expression):
+class ListeAttribut(Expr):
     """
     Modélise une liste d'attributs d'une table
     
@@ -110,22 +113,25 @@ class ListeAttribut(Expression):
 
 
 
-class Relation(Expression):
+class Relation(Expr):
     """
-    Modélise une relation d'une base de donnée relationnelle
+    Modélise une table d'une base de donnée relationnelle
     
     """
-
-    def __init__(self, name):
+    def __init__(self, name, c):
         self.name = name
-    
+        self.c = c
+
     def compute(self):
         return self
+
+    def getCol(self, c):
+        return rd.getColAndTypes(self.name, c)
     
     def __str__(self):
         return self.name
 
-class Cst(Expression):
+class Cst(Expr):
     """
     Modélise une constante utilisable dans une expression SPJRUD
     
