@@ -94,9 +94,10 @@ def selectSql(attrs, table, where):
         req += "FROM " + str(table)
         if len(where) != 0:
             req += " WHERE " + where
-        return c.execute(req).fetchall()
+        c.execute(req).fetchall()
+        return req
     except sqlite3.Error as e:
-        print("Erreur :\nMéthode getColAndTypes non-exécutée car :\n",e)
+        print("Erreur :\nMéthode selectSql non-exécutée car :\n",e)
 
 def insertSql(table, values):
     """
@@ -126,7 +127,7 @@ def insertSql(table, values):
         conn.commit()
         return req
     except sqlite3.Error as e:
-        print("Erreur :\nMéthode getColAndTypes non-exécutée car :\n",e)
+        print("Erreur :\nMéthode insertSql non-exécutée car :\n",e)
 
 def modifAttr(table, instruction, props):
     """
@@ -153,17 +154,73 @@ def modifAttr(table, instruction, props):
         conn.commit()
         return req
     except sqlite3.Error as e:
-        print("Erreur :\nMéthode getColAndTypes non-exécutée car :\n",e)
+        print("Erreur :\nMéthode modifAttr non-exécutée car :\n",e)
 
+def createTempAs(name, select):
+    """
+    Permet de créer une table temporaire sur une BDD (avec AS)
 
-"""
-- Créer sous-bdd
-"""
+    Attributs :
+    -----------
+        - name : String
+            Le nom de la table en String
+        - select :
+            Requête selectsql()
+
+    Retour :
+    --------
+        - Créer une table temporaire se terminant à conn.close()
+    """
+    try:
+        if select != "":
+            req = "CREATE TEMP TABLE IF NOT EXISTS " + str(name) + " AS " + str(select)
+            c.execute(req)
+            return req
+    except sqlite3.Error as e:
+        print("Erreur :\nMéthode createTempAs non-exécutée car :\n",e)
+
+def createTempBasic(name, attrList):
+    """
+    Permet de créer une table temporaire sur une BDD (sans AS)
+
+    Attributs :
+    -----------
+        - name : String
+            Le nom de la table en String
+        - attrList :
+            Liste de String reprenant les attributs 
+            de la nouvelle table ["attr1 type1", "attr2 type2",...]
+
+    Retour :
+    --------
+        - Créer une table temporaire se terminant à conn.close()
+    """
+    if len(attrList) == 0:
+        print("Veuillez introduire des attributs dans la table temporaire")
+    try:
+        req = "CREATE TEMP TABLE IF NOT EXISTS " + str(name) + " ("
+        if len(attrList) != 0:
+            for i in range(len(attrList)):
+                if i != len(attrList)-1:
+                    req += attrList[i] + ", "
+                else:
+                    req += attrList[i] + ")"
+            c.execute(req)
+        return req
+    except sqlite3.Error as e:
+        print("Erreur :\nMéthode createTempBasic non-exécutée car :\n",e)
 
 #print(getColAndTypes("dataVoit"))
 #print(getTableAr("dataVoit"))
 #print(insertSql("dataVoit", ["8", "Citroen", "Noire", "2015"]))
-#print(selectSql(["voiture", "couleur", "idVoit", "annee"], "dataVoit", ""))
+
+#a = selectSql(["voiture", "couleur", "idVoit", "annee"], "dataVoit", "")
+#print(createTempAs("tempotable", a))
+#print(getColAndTypes("tempotable"))
+
 #print(modifAttr("dataVoit", "rename column", "id to idVoit"))
+
+#print(createTempBasic("tableTest", ["attri1 text", "attri2 int"]))
+#print(getColAndTypes("tableTest"))
 
 conn.close()
