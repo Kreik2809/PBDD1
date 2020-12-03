@@ -2,16 +2,28 @@ import sqlite3
 from sqlite3.dbapi2 import Error
 
 #Connexion à la base de donnée et initialisation du curseur pour exécuter les commandes
+
 conn = sqlite3.connect('../ourdatabaseCars.db')
 #conn.row_factory = sqlite3.Row
 c = conn.cursor()
 
-
-#   Cette fonction prend en entrée une table et retourne une liste reprenant les noms de colonnes ainsi que leur type d'attribut
-#   sous la forme : [['col1', 'type1'], ['col2', 'type2'], ..., ['coln', 'typen'],]
-#   Note : Cette fonction lance une erreur, affiche un message d'erreur et retourne une liste vide
-#          lorsqu'aucune table n'a été trouvée.
 def getColAndTypes(table):
+    """
+    Récupère les attributs et types d attributs d une table SQLite
+
+    Attributs :
+    -----------
+        - table : String
+            Prend l emplacement de la table
+    Retour :
+    --------
+        - liste :
+            [['attribut1', 'type1'], ['attribut2', 'type2'], ..., ['attributn', 'typen'],]
+    Note :
+    ------
+        - Lance une erreur si la table n existe pas et retourne
+        une liste vide.
+    """
     try:
         c.execute("SELECT * FROM "+table)
     except sqlite3.Error as e:
@@ -35,49 +47,114 @@ def getColAndTypes(table):
 
     return listes2
 
-#   Prend en entrée une table et retourne son arité
-#   Note : Cette fonction lance une erreur, affiche un message d'erreur et retourne une liste vide
-#          lorsqu'aucune table n'a été trouvée.
-
 def getTableAr(table):
+    """
+    Récupère l arrité d une table
+
+    Attributs :
+    -----------
+        - table : String
+            Prend le nom de la table
+    Retour :
+    --------
+        - int :
+            Entier représentant l arité de la table
+    Note :
+    ------
+        - Lance une erreur si la table n existe pas et retourne 0.
+    """
     return len(getColAndTypes(table))
 
-#   Prend en entrée : list(attrs), str(table), str(where):
-#   Retourne liste contenant tuples de la sélection
-
 def selectSql(attrs, table, where):
-    req = "SELECT"
-    for i in range(len(attrs)):
-        if i == len(attrs)-1:
-            req += " " + str(attrs[i]) + " "
-        else:
-            req += " "+ str(attrs[i]) + ','
-    req += "FROM " + str(table)
-    if len(where) != 0:
-        req += " WHERE " + where
-    return (c.execute(req)).fetchall()
+    """
+    Exécute une requête SELECT sur une BDD SQLite
 
-#   Permet d'insérer une ligne dans une table
-#   prend en entrée une table et des values string (ATTENTION : Bien respecter l'insertion
-#   en mettant toutes les valeurs et tout en STRING)
-#   Retourne sous string la requête et l'exécute dans la base de données.
+    Attributs :
+    -----------
+        - attrs : Liste
+            Liste d attributs que l on veut sélectionner sur une table
+        - table : String
+            Prend le nom de la table
+        - where : String
+            Chaîne de caractères représentant les conditions (on peut utiliser order by aussi)
+    Retour :
+    --------
+        - Retourne liste contenant tuples de la sélection
+    Note :
+    ------
+        - Lance une erreur si la table n existe pas et retourne None.
+    """
+    try:
+        req = "SELECT"
+        for i in range(len(attrs)):
+            if i == len(attrs)-1:
+                req += " " + str(attrs[i]) + " "
+            else:
+                req += " "+ str(attrs[i]) + ','
+        req += "FROM " + str(table)
+        if len(where) != 0:
+            req += " WHERE " + where
+        return c.execute(req).fetchall()
+    except sqlite3.Error as e:
+        print("Erreur :\nMéthode getColAndTypes non-exécutée car :\n",e)
 
 def insertSql(table, values):
-    req = "INSERT INTO " + str(table) + " VALUES ("
-    for i in range(len(values)):
-        if i == len(values)-1:
-            req += "'" + values[i] + "')"
-        else:
-            req += "'" + values[i] + "', "
-    c.execute(req)
-    conn.commit()
-    return req
+    """
+    Exécute une requête INSERT INTO sur une BDD SQLite
+
+    Attributs :
+    -----------
+        - table : String
+            Prend le nom de la table
+        - values : Liste String
+            Prend une liste de string contenant les valeurs à ajouter par attribut
+    Retour :
+    --------
+        - Retourne un string contenant la requête exécutée ou None si la requête n'est pas possible
+    Note :
+    ------
+        - Lance une erreur si la table n existe pas et retourne None.
+    """
+    try:
+        req = "INSERT INTO " + str(table) + " VALUES ("
+        for i in range(len(values)):
+            if i == len(values)-1:
+                req += "'" + values[i] + "')"
+            else:
+                req += "'" + values[i] + "', "
+        c.execute(req)
+        conn.commit()
+        return req
+    except sqlite3.Error as e:
+        print("Erreur :\nMéthode getColAndTypes non-exécutée car :\n",e)
 
 def modifAttr(table, instruction, props):
-    req = "ALTER TABLE " + str(table) + " " + str(instruction) + " " + str(props)
-    c.execute(req)
-    conn.commit()
-    return req
+    """
+    Exécute une requête ALTER TABLE sur une BDD SQLite
+
+    Attributs :
+    -----------
+        - table : String
+            Prend le nom de la table
+        - instruction : String
+            Prend un string représentant l instruction à exécuter comme RENAME COLUMN
+        - props : String
+            String indiquant sur quoi l instruction doit être exécutée comme id to idVoit dans l'exemple du dessus
+    Retour :
+    --------
+        - Retourne un string contenant la requête exécutée ou None si la requête n'est pas possible
+    Note :
+    ------
+        - Lance une erreur si la table n existe pas et retourne None.
+    """
+    try:
+        req = "ALTER TABLE " + str(table) + " " + str(instruction) + " " + str(props)
+        c.execute(req)
+        conn.commit()
+        return req
+    except sqlite3.Error as e:
+        print("Erreur :\nMéthode getColAndTypes non-exécutée car :\n",e)
+
 
 """
 - Créer sous-bdd
@@ -85,12 +162,8 @@ def modifAttr(table, instruction, props):
 
 #print(getColAndTypes("dataVoit"))
 #print(getTableAr("dataVoit"))
-
-#print(insertSql("dataVoit", ["6", "Mercedes", "Blanche", "2019"]))
-#print(selectSql(["voiture", "couleur", "id", "annee"], "dataVoit", ""))
-
-print(modifAttr("dataVoit", "rename column", "id to idVoit"))
-
-print(getColAndTypes("dataVoit"))
+#print(insertSql("dataVoit", ["8", "Citroen", "Noire", "2015"]))
+#print(selectSql(["voiture", "couleur", "idVoit", "annee"], "dataVoit", ""))
+#print(modifAttr("dataVoit", "rename column", "id to idVoit"))
 
 conn.close()
