@@ -46,7 +46,7 @@ def analyseLen(text, count):
             x += 1
         if text[count:count+5] == "Union":
             nbreJUD += 1
-        elif text[count:count+5] == "Diff" or text[count:count+4] == "Join":
+        elif text[count:count+4] == "Diff" or text[count:count+4] == "Join":
             nbreJUD += 1
         count += 1
     l = count - startCount
@@ -305,7 +305,7 @@ if __name__ == "__main__":
     expression = None
     flag = []
     #res = analyseInput(s, expression, 0, flag)
-    print(res)
-    print(res.compute())
+    #print(res)
+    #print(res.compute())
     
 
