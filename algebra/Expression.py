@@ -58,10 +58,20 @@ class Operation(Expr):
         self.c = c
 
     def op(self, expr1, expr2):
-        #la méthode op est définie dans les sous classe modélisant des opérations concrètes
+        #la méthode op est définie dans les sous classes modélisant des opérations concrètes
         return 0
-
+    
+    def verif(self, expr1, expr2):
+        #la méthode vérif est définie dans les sous classes modélisant des opérations concrètes
+        return 0
+    
+    def getCol(self, c):
+        #la méthode getCol est définie dans les sous classes modélisation des opérations concrètes
+        #cette fonction retourne la schéma des attributs de l'expression en la parcourant de manière récursive
+        return 0
+    
     def addExpr(self, expression):
+        """Ajoute une sous-expression"""
         if (self.param2 == None):
             self.param2 = expression
         else:
@@ -70,6 +80,10 @@ class Operation(Expr):
     def compute(self):
         """Calcul de manière récursive le résultat de l'expressions"""
         return self.op(self.param1.compute(), self.param2.compute())
+    
+    def validation(self):
+        """Effectue la validation de l'expression de manière récursive"""
+        return self.verif(self.param1.validation(), self.param2.validation())
     
 
 class Attribut(Expr):
@@ -81,6 +95,12 @@ class Attribut(Expr):
         self.name = name
 
     def compute(self):
+        return self
+    
+    def getType(self):
+        pass
+
+    def validation(self):
         return self
     
     def __str__(self):
@@ -123,6 +143,9 @@ class Relation(Expr):
         self.c = c
 
     def compute(self):
+        return self
+    
+    def validation(self):
         return self
 
     def getCol(self, c):

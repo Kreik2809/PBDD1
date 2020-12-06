@@ -189,7 +189,6 @@ def analyseJUD(text, expression, count, flag, OP, c):
         tempf = []
         #On effectue une seconde récursion pour déterminer le premier paramètre
         l = analyseLen(text, count)
-        print(l)
         tempExpr = analyseInput(text, tempExpr, count, tempf, c)
         currentExpression.param1 = tempExpr
         #On calcule l'indice de début du param2
@@ -216,7 +215,7 @@ def analyseRename(text, expression, count,flag, c):
     """
     Analyse une opération de Renommage entrée au clavier.
     Syntaxe attendue : 
-        -exemple1 : Rename(newName,oldName,Rel(name))
+        -exemple1 : Rename(oldName,newName,Rel(name))
     """
     flag.append(False)
     newAttr = None
@@ -226,12 +225,12 @@ def analyseRename(text, expression, count,flag, c):
     #On analyse newAttr
     count += 1
     nAttr, j = analyseAttr(text, count)
-    currentExpression.newAttr = e.Attribut(nAttr)
+    currentExpression.param1 = e.Attribut(nAttr)
     count = j
     #On analyse le param1
     count += 1
     nParam1, j = analyseAttr(text, count)
-    currentExpression.param1 = e.Attribut(nParam1)
+    currentExpression.newAttr = e.Attribut(nParam1)
     count = j
     #On analyse le param2
     count += 1
