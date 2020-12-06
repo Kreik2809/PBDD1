@@ -42,6 +42,44 @@ class Selection(Expression.Operation):
     
     def op(self, param1, param2):
         pass
+
+    def verif(self, param1, param2):
+        t = ""
+        lColParam2 = param2.getCol(self.c)
+        if (isinstance(self.attr, Expression.Cst)):
+            t = self.attr.getType()
+            for elem in lColParam2:
+                if (elem[0] == str(param1)):
+                    if (elem[1] == t):
+                        print("expression correct")
+                        return self
+                    else:
+                        print("expression incorrect")
+                        print("Le type de la constante " + str(self.attr) + " (" + t + ")" + " est différent du type de l'attribut " + str(param1) + " (" + elem[1] + ")")
+                        return self
+            print("expression incorrect")
+            print("L'attribut " + str(param1) + " n'existe pas dans le schéma de l'expression " + str(param2))
+            return self      
+        else:
+            for elem in lColParam2:
+                if elem[0] == str(self.attr):
+                    t = elem[1]
+            if (t == ""):
+                print("expression incorrect")
+                print("L'attribut " + str(self.attr) + " n'existe pas dans le schéma de l'expression " + str(param2))
+            else:
+                for elem in lColParam2:
+                    if (elem[0] == str(param1)):
+                        if (elem[1] == t):
+                            print("expression correct")
+                            return self
+                        else:
+                            print("expression incorrect")
+                            print("Le type de la constante " + str(self.attr) + " (" + t + ")" + " est différent du type de l'attribut " + str(param1) + " (" + elem[1] + ")")
+                            return self
+
+    def getCol(self, c):
+        return self.param2.getCol(c)
     
 
     def __str__(self):
@@ -71,6 +109,29 @@ class Proj(Expression.Operation):
             s = s + str(elem) + ", "
         s = s + " sur la relation : " + str(param2)
         return s
+
+    def verif(self, param1, param2):
+        lColParam2 = param2.getCol(self.c)
+        param2Attr = []
+        for t in lColParam2:
+            param2Attr.append(t[0])
+        for elem in param1.liste:
+            if str(elem) not in param2Attr:
+                print("Expression incorrect")
+                print("L'attribut : " + str(elem) + " n'existe pas dans le schéma de l'expression : " + str(self))
+                raise Exception
+        print("Expression correct")
+        return self
+        
+    def getCol(self, c):
+        lColParam2 = self.param2.getCol(self.c)
+        lCol = []
+        for elem in self.param1.liste:
+            for i in range(len(lColParam2)):
+                if(str(elem)==lColParam2[i][0]):
+                    lCol.append(lColParam2[i])
+        return lCol
+
     
     def __str__(self):
         s = "[ " + self.symbol + "( "
@@ -152,7 +213,7 @@ class Rename(Expression.Operation):
                 return self
         print("expression incorrect")
         print("L'attribut " + str(param1) + " n'est pas présent dans le schéma de la sous expression " + str(param2))
-        return self
+        raise Exception
 
     def getCol(self, c):
         lCol =self.param2.getCol(self.c)

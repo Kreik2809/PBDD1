@@ -97,9 +97,6 @@ class Attribut(Expr):
     def compute(self):
         return self
     
-    def getType(self):
-        pass
-
     def validation(self):
         return self
     
@@ -121,6 +118,9 @@ class ListeAttribut(Expr):
         self.liste = liste
 
     def compute(self):
+        return self
+    
+    def validation(self):
         return self
     
     def __str__(self):
@@ -165,6 +165,12 @@ class Cst(Expr):
     
     def compute(self):
         return self.valeur
+    
+    def getType(self):
+        if type(self.valeur) == float:
+            return "float"
+        else:
+            return "text"
     
     def __str__(self):
         return str(self.valeur)
