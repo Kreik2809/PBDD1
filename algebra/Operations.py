@@ -14,10 +14,9 @@ class Selection(Expression.Operation):
         La relation sur laquelle on effectue la sélection
     """
 
-    def __init__(self, param1, attr, param2):
-        self.param1 = param1
+    def __init__(self, param1, param2, attr, c):
+        super().__init__(param1,param2, c)
         self.attr = attr
-        self.param2 = param2
         self.symbol = "σ"
     
     def op(self, param1, param2):
@@ -41,9 +40,8 @@ class Proj(Expression.Operation):
         La relation sur laquelle on effectue la projection
     """
 
-    def __init__(self, param1, param2):
-        self.param1 = param1
-        self.param2 = param2
+    def __init__(self, param1, param2, c):
+        super().__init__(param1,param2, c)
         self.symbol = "π"
     
     def op(self, param1, param2):
@@ -73,9 +71,8 @@ class Join(Expression.Operation):
         La deuxième relation de la jointure
     """
 
-    def __init__(self, param1, param2):
-        self.param1 = param1
-        self.param2 = param2
+    def __init__(self, param1, param2, c):
+        super().__init__(param1,param2, c)
         self.symbol = "x"
     
     def op(self, param1, param2):
@@ -100,10 +97,9 @@ class Rename(Expression.Operation):
         La relation sur laquelle on effectue le renommage
     """  
 
-    def __init__(self, newAttr, param1, param2):
+    def __init__(self, param1, param2, newAttr, c):
+        super().__init__(param1,param2, c)
         self.newAttr = newAttr
-        self.param1 = param1
-        self.param2 = param2
         self.symbol = "φ"
 
     def op(self, param1, param2):
@@ -127,9 +123,7 @@ class Union(Expression.Operation):
     """
     
     def __init__(self, param1, param2, c):
-        self.param1 = param1
-        self.param2 = param2
-        self.c = c
+        super().__init__(param1,param2, c)
         self.symbol = "U"
     
     def op(self, param1, param2):
@@ -157,9 +151,8 @@ class Diff(Expression.Operation):
         La deuxième relation de la différence
     """
 
-    def __init__(self, param1, param2):
-        self.param1 = param1
-        self.param2 = param2
+    def __init__(self, param1, param2, c):
+        super().__init__(param1,param2, c)
         self.symbol = "-"
 
     def op(self, param1, param2):

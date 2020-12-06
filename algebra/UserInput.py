@@ -1,5 +1,6 @@
 import Expression as e
 import Operations as o
+import sqlite3
 
 def readInput():
     """
@@ -67,7 +68,7 @@ def analyseSelect(text, expression, count, flag, c):
     param1 = None
     attr = None
     param2 = None
-    currentExpression = o.Selection(param1, attr, param2)
+    currentExpression = o.Selection(param1, param2, attr, c)
     #On analyse le param1 (L'attribut que l'on sélectionne)
     count += 1
     attr, j = analyseAttr(text,count)
@@ -123,7 +124,7 @@ def analyseProj(text, expression, count, flag, c):
     flag.append(False)
     listAttr = e.ListeAttribut([])
     param2 = None
-    currentExpression = o.Proj(listAttr, param2)
+    currentExpression = o.Proj(listAttr, param2, c)
     #On analyse la liste d'attributs
     count += 2 
     endAttr = count
@@ -172,11 +173,11 @@ def analyseJUD(text, expression, count, flag, OP, c):
     param1 = None
     param2 = None
     if(OP == "J"):
-        currentExpression = o.Join(param1,param2)
+        currentExpression = o.Join(param1,param2, c)
     elif (OP == "U"):
         currentExpression = o.Union(param1,param2, c)
     elif (OP == "D"):
-        currentExpression = o.Diff(param1,param2)
+        currentExpression = o.Diff(param1,param2, c)
     #On analyse le param1
     count += 1
     if(text[count:count+3] == "Rel"):
@@ -221,7 +222,7 @@ def analyseRename(text, expression, count,flag, c):
     newAttr = None
     param1 = None
     param2 = None
-    currentExpression = o.Rename(newAttr, param1, param2)
+    currentExpression = o.Rename(param1, param2, newAttr, c)
     #On analyse newAttr
     count += 1
     nAttr, j = analyseAttr(text, count)
@@ -301,11 +302,14 @@ def analyseInput(text,expression, count, flag, cursor):
 
            
 if __name__ == "__main__":
+    conn = sqlite3.connect('sqlite/database.db')
+    c = conn.cursor()
     s = readInput()
     expression = None
     flag = []
-    #res = analyseInput(s, expression, 0, flag)
-    #print(res)
-    #print(res.compute())
+    res = analyseInput(s, expression, 0, flag, c)
+    print(res)
+    print(res.compute())
+    conn.close()
     
 

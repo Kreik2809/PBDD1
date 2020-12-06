@@ -13,3 +13,4 @@ flag = []
 res = ui.analyseInput(s, expression, 0, flag, c)
 print("RES: " + str(res))
 res.compute()
+conn.close()

@@ -51,10 +51,11 @@ class Operation(Expr):
     -nbreJUD est un nombre temporaire que l'on incrémente afin de calculuer l'index du début du param2 dans une expression J/U/D
     """
 
-    def __init__(self, param1, param2):
+    def __init__(self, param1, param2, c):
         self.param1 = param1
         self.param2 = param2
         self.symbol = "?"
+        self.c = c
 
     def op(self, expr1, expr2):
         #la méthode op est définie dans les sous classe modélisant des opérations concrètes
