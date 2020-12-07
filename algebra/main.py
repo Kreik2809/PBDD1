@@ -5,8 +5,8 @@ import sqlite3
 conn = sqlite3.connect('sqlite/database.db')
 c = conn.cursor()
 #print(rd.selectSql(["*"],"Cities", [], c))
-print(rd.getColAndTypes("Test1", c))
-print(rd.getColAndTypes("Test2", c))
+#print(rd.getColAndTypes("Test1", c))
+#print(rd.getColAndTypes("Test2", c))
 print(rd.getColAndTypes("Cities", c))
 
 
@@ -21,6 +21,6 @@ try :
     res.validation()
     res.compute()
 except Exception as e:
-    print("Veuillez corriger votre expression")
+    print("Veuillez corriger votre expression.")
 
 conn.close()

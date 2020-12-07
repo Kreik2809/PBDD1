@@ -62,6 +62,9 @@ class Operation(Expr):
         return 0
     
     def verif(self, expr1, expr2):
+        """
+        Cette méthode effectue la vérification de l'expression
+        """
         #la méthode vérif est définie dans les sous classes modélisant des opérations concrètes
         return 0
     

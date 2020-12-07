@@ -7,16 +7,20 @@ def isEquals(l1,l2, expr):
     Elle retourne True si les deux listes sont identiques et False sinon. 
     """
     if (len(l1) != len(l2)):
-        print(str(expr) + " : le nombres d'attributs de " + str(expr.param1) + " et de " + str(expr.param2) + " sont différents")
+        print("Expression invalide.")
+        print(str(expr) + " : le nombres d'attributs de " + str(expr.param1) + " et de " + str(expr.param2) + " sont différents.")
         return False
     else:
         for i in range(len(l1)):
             if (l1[i][0] != l2[i][0]):
-                print("Les schémas sur laquelle on applique l'expression : " + str(expr) + " ne sont pas identiques")
-                print("L'attribut : " + l1[i][0] + " situé dans le schéma : " + str(expr.param1) + " n'existe pas dans le schéma de : " + str(expr.param2))
+                print("Expression invalide.")
+                print("Les schémas sur laquelle on applique l'expression : " + str(expr) + " ne sont pas identiques.")
+                print("L'attribut : " + l1[i][0] + " situé dans le schéma : " + str(expr.param1) + " n'existe pas dans le schéma de : " + str(expr.param2) +".")
                 return False
             elif (l1[i][1] != l2[i][1]):
-                print("Le type de l'attribut : " + l1[i][0] + " est différent dans les deux sous expressions de " + str(expr))
+                print("Expression invalide.")
+                print("Les schémas sur laquelle on applique l'expression : " + str(expr) + " ne sont pas identiques.")
+                print("Le type de l'attribut : " + l1[i][0] + " est différent dans les deux sous expressions de " + str(expr) +".")
                 return False
         return True
 
@@ -44,41 +48,49 @@ class Selection(Expression.Operation):
         pass
 
     def verif(self, param1, param2):
-        t = ""
+        #On doit vérifier que param1 et attr existent dans le schéma de param2.
+        #On doit vérifier que param1 et attr sont du même type.
+        attrFinded = False
+        param1Finded = False
+        attrType = ""
+        param1Type= ""
         lColParam2 = param2.getCol(self.c)
+        #On cherche param1 et on défini son type
+        for t in lColParam2:
+            if (str(param1) == t[0]):
+                param1Finded = True
+                param1Type = t[1]
+        #On cherche et on défini le type de attr
         if (isinstance(self.attr, Expression.Cst)):
-            t = self.attr.getType()
-            for elem in lColParam2:
-                if (elem[0] == str(param1)):
-                    if (elem[1] == t):
-                        print("expression correct")
-                        return self
-                    else:
-                        print("expression incorrect")
-                        print("Le type de la constante " + str(self.attr) + " (" + t + ")" + " est différent du type de l'attribut " + str(param1) + " (" + elem[1] + ")")
-                        return self
-            print("expression incorrect")
-            print("L'attribut " + str(param1) + " n'existe pas dans le schéma de l'expression " + str(param2))
-            return self      
+            attrType = self.attr.getType()
+            attrFinded = True
         else:
             for elem in lColParam2:
                 if elem[0] == str(self.attr):
-                    t = elem[1]
-            if (t == ""):
-                print("expression incorrect")
-                print("L'attribut " + str(self.attr) + " n'existe pas dans le schéma de l'expression " + str(param2))
+                    attrFinded = True
+                    attrType = elem[1]
+        if(attrFinded == False):
+            print("Expression invalide.")
+            print("L'attribut " + str(self.attr) + " n'existe pas dans le schéma de l'expression " + str(param2) +".")
+            raise Exception
+        if (param1Finded == False):
+            print("Expression invalide.")
+            print("L'attribut " + str(param1) + " n'existe pas dans le schéma de l'expression " + str(param2) +".")
+            raise Exception   
+        if (attrType == param1Type):
+            return self
+        else:
+            print("Expression invalide.")
+            if (isinstance(self.attr, Expression.Cst)):
+                print("Le type de la constante " + str(self.attr) + " (" + attrType + ")" + " est différent du type de l'attribut " + str(param1) + " (" + param1Type + ").")
             else:
-                for elem in lColParam2:
-                    if (elem[0] == str(param1)):
-                        if (elem[1] == t):
-                            print("expression correct")
-                            return self
-                        else:
-                            print("expression incorrect")
-                            print("Le type de la constante " + str(self.attr) + " (" + t + ")" + " est différent du type de l'attribut " + str(param1) + " (" + elem[1] + ")")
-                            return self
+                print("Le type de l'attribut " + str(self.attr) + " (" + attrType + ")" + " est différent du type de l'attribut " + str(param1) + " (" + param1Type + ").")
+            raise Exception 
+        
 
     def getCol(self, c):
+        #Le schéma retourné par une opération de Sélection est le schéma de la relation sur laquelle on l'applique.
+        #ICI : param2
         return self.param2.getCol(c)
     
 
@@ -111,19 +123,20 @@ class Proj(Expression.Operation):
         return s
 
     def verif(self, param1, param2):
+        #On doit vérifier que tous les attributs présent dans la liste param1 existent dans le schéma de param2
         lColParam2 = param2.getCol(self.c)
         param2Attr = []
         for t in lColParam2:
             param2Attr.append(t[0])
         for elem in param1.liste:
             if str(elem) not in param2Attr:
-                print("Expression incorrect")
-                print("L'attribut : " + str(elem) + " n'existe pas dans le schéma de l'expression : " + str(self))
+                print("Expression invalide.")
+                print("L'attribut : " + str(elem) + " n'existe pas dans le schéma de l'expression : " + str(self.param2) + ".")
                 raise Exception
-        print("Expression correct")
         return self
         
     def getCol(self, c):
+        #Le schéma retourné par une opération de Projection est le schéma contenant uniquement les attributs de la liste param1 
         lColParam2 = self.param2.getCol(self.c)
         lCol = []
         for elem in self.param1.liste:
@@ -162,10 +175,11 @@ class Join(Expression.Operation):
         return s
     
     def verif(self, param1, param2):
-        print("Expression correct")
+        #Une opération de jointure est toujours valide
         return self
 
     def getCol(self, c):
+        #Le schéma retourné par une opération de Jointure est "l'assemblage" des schéma de ses deux sous expressions
         lColParam1 = self.param1.getCol(self.c)
         lColParam2 = self.param2.getCol(self.c)
         lCol = []
@@ -206,16 +220,18 @@ class Rename(Expression.Operation):
         return s
     
     def verif(self, param1, param2):
+        #On doit vérifier que param1 existe dans le schéma de param2
         lCol = param2.getCol(self.c)
         for i in range(len(lCol)):
             if str(param1) == lCol[i][0]:
-                print("expression correct")
                 return self
-        print("expression incorrect")
-        print("L'attribut " + str(param1) + " n'est pas présent dans le schéma de la sous expression " + str(param2))
+        print("expression invalide.")
+        print("L'attribut " + str(param1) + " n'est pas présent dans le schéma de la sous expression " + str(param2) + ".")
         raise Exception
 
     def getCol(self, c):
+        #Le schéma retourné par une opération de Renommage est le schéma de l'expression sur laquelle on l'applique en tenant compte de 
+        #la modification du nom de l'attribut renommé.
         lCol =self.param2.getCol(self.c)
         for i in range(len(lCol)):
             if (lCol[i][0] == str(self.param1)):
@@ -246,17 +262,18 @@ class Union(Expression.Operation):
         pass
 
     def verif(self, param1, param2):
+        #On doit vérifier que les schémas des deux sous-expressions sur lesquelles on applique l'Union sont exactement identiques.
         lParam1 = param1.getCol(self.c)
         lParam2 = param2.getCol(self.c)
         if (isEquals(lParam1,lParam2,self)):
-            print("L'expression est correct")
             return self
         else:
-            print("Expression incorrect")
-            return self
+            raise Exception
 
     
     def getCol(self, c):
+        #Le schéma retourné par une opération d'Union est le schéma d'une des relations sur lesquelles on l'applique.
+        #ICI : param1
         return self.param1.getCol(self.c)
         
     
@@ -285,16 +302,17 @@ class Diff(Expression.Operation):
         return s
 
     def verif(self, param1, param2):
+        #On doit vérifier que les schémas des deux sous-expressions sur lesquelles on applique la différence sont exactement identiques.
         lParam1 = param1.getCol(self.c)
         lParam2 = param2.getCol(self.c)
         if (isEquals(lParam1,lParam2,self)):
-            print("L'expression est correct")
             return self
         else:
-            print("Expression incorrect")
-            return self
+            raise Exception
     
     def getCol(self, c):
+        #Le schéma retourné par une opération de Différence est le schéma d'une des relations sur lesquelles on l'applique.
+        #ICI : param1
         return self.param1.getCol(self.c)
     
     def __str__(self):
