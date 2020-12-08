@@ -118,7 +118,9 @@ class Proj(Expression.Operation):
     
     def op(self, param1, param2):
         print("On effectue la projection")
-        return sql.projectionSql(self.param1.liste, self.param2, self.c)
+        print(str(param1))
+        print(str(param2))
+        return sql.projectionSql(param1.liste, param2, self.c)
 
 
     def verif(self, param1, param2):

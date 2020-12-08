@@ -128,7 +128,7 @@ class ListeAttribut(Expr):
     
     def __str__(self):
         s = "[ "
-        if (len(self.liste > 1)):
+        if (len(self.liste)>1):
             for i in range(len(self.liste) - 1):
                 s = s + str(self.liste[i]) + ", "
         s = s + str(self.liste[-1]) + " ]"
