@@ -50,6 +50,7 @@ class Operation(Expr):
     -Un objet de cette classe ne sera jamais instancié.
     -nbreJUD est un nombre temporaire que l'on incrémente afin de calculuer l'index du début du param2 dans une expression J/U/D
     """
+    number = 0
 
     def __init__(self, param1, param2, c):
         self.param1 = param1

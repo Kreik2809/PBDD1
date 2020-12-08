@@ -46,7 +46,13 @@ class Selection(Expression.Operation):
         self.symbol = "σ"
     
     def op(self, param1, param2):
-        pass
+        print("on effectue la sélection")
+        print(param2)
+        Expression.Operation.number += 1
+        if isinstance(self.attr, Expression.Cst):
+            return sql.selectionSqlCst(param1, self.attr, param2, self.c, Expression.Operation.number)
+        else:
+            return sql.selectionSqlAttr(param1, self.attr, param2, self.c, self.number)
 
     def verif(self, param1, param2):
         #On doit vérifier que param1 et attr existent dans le schéma de param2.
@@ -118,9 +124,8 @@ class Proj(Expression.Operation):
     
     def op(self, param1, param2):
         print("On effectue la projection")
-        print(str(param1))
-        print(str(param2))
-        return sql.projectionSql(param1.liste, param2, self.c)
+        Expression.Operation.number += 1
+        return sql.projectionSql(param1.liste, param2, self.c, Expression.Operation.number)
 
 
     def verif(self, param1, param2):
@@ -172,8 +177,10 @@ class Join(Expression.Operation):
         self.symbol = "x"
     
     def op(self, param1, param2):
-        s = "jointure de la relation " + str(param1) + " sur la relation " + str(param2)
-        return s
+        print("on effectue la jointure")
+        Expression.Operation.number += 1
+        return sql.joinSql(param1,param2,self.c, Expression.Operation.number)
+
     
     def verif(self, param1, param2):
         #Une opération de jointure est toujours valide
@@ -217,8 +224,9 @@ class Rename(Expression.Operation):
         self.symbol = "φ"
 
     def op(self, param1, param2):
-        s = "on renomme : " + str(param1) + " de la relation : " + str(param2) + " en : " + str(self.newAttr)
-        return s
+        print("on effectue le renommage")
+        Expression.Operation.number += 1
+        return sql.renameSql(param1, self.newAttr, param2, self.c, Expression.Operation.number)
     
     def verif(self, param1, param2):
         #On doit vérifier que param1 existe dans le schéma de param2
@@ -260,7 +268,10 @@ class Union(Expression.Operation):
         self.symbol = "U"
     
     def op(self, param1, param2):
-        pass
+        print("on effectue l'union")
+        Expression.Operation.number+=1
+        return sql.unionSql(param1,param2,self.c, Expression.Operation.number)
+
 
     def verif(self, param1, param2):
         #On doit vérifier que les schémas des deux sous-expressions sur lesquelles on applique l'Union sont exactement identiques.
@@ -299,8 +310,9 @@ class Diff(Expression.Operation):
         self.symbol = "-"
 
     def op(self, param1, param2):
-        s = "la différence des relations : " + str(param1) + " et " + str(param2)
-        return s
+        print("on effectue la différence")
+        Expression.Operation.number+=1
+        return sql.diffSql(param1,param2,self.c, Expression.Operation.number)
 
     def verif(self, param1, param2):
         #On doit vérifier que les schémas des deux sous-expressions sur lesquelles on applique la différence sont exactement identiques.

@@ -32,6 +32,8 @@ c.execute("INSERT INTO data VALUES ('Jean-Louis', 'Porilo')")
 """
 
 
+c.execute("INSERT INTO Test1 VALUES ('Pierre-Louis', 'Pierre-Louis')")
+
 #Permet de sauvegarder les données
 conn.commit()
 

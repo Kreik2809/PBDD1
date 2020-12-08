@@ -6,8 +6,8 @@ import reqDefs as sql
 conn = sqlite3.connect('sqlite/database.db')
 c = conn.cursor()
 #print(rd.selectSql(["*"],"Cities", [], c))
-#print(rd.getColAndTypes("Test1", c))
-#print(rd.getColAndTypes("Test2", c))
+print(rd.getColAndTypes("Test1", c))
+print(rd.getColAndTypes("Test2", c))
 print(rd.getColAndTypes("Cities", c))
 
 
@@ -20,7 +20,9 @@ print("Expression : " + str(expr))
 try :
     expr.validation()
     res = expr.compute()
+    print(res)
     print(sql.afficher(res, expr.c))
+    print(rd.getColAndTypes("temp1", c))
 
 except Exception as e:
     print("Veuillez corriger votre expression.")
