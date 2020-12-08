@@ -8,6 +8,7 @@ c = conn.cursor()
 #print(rd.selectSql(["*"],"Cities", [], c))
 print(rd.getColAndTypes("Test1", c))
 print(rd.getColAndTypes("Test2", c))
+print(rd.getColAndTypes("Other", c))
 print(rd.getColAndTypes("Cities", c))
 
 

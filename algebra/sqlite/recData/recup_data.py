@@ -145,7 +145,6 @@ def modifAttr(table, instruction, props, c):
     try:
         req = "ALTER TABLE " + str(table) + " " + str(instruction) + " " + str(props)
         c.execute(req)
-        conn.commit()
         return req
     except sqlite3.Error as e:
         print("Erreur :\nMéthode modifAttr non-exécutée car :\n",e)

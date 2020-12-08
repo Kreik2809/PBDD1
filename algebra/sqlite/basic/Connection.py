@@ -4,7 +4,7 @@ conn = sqlite3.connect('../database.db')
 
 c = conn.cursor()
 
-#c.execute('''CREATE TABLE Test1 (Name text, Name2 text)''')
+c.execute('''CREATE TABLE Other (Modele text, Couleur text)''')
 
 #c.execute('''CREATE TABLE Test2 (Name text, Name3 text)''')
 
@@ -31,8 +31,9 @@ c.execute("INSERT INTO data VALUES ('Nicolas', 'Sournac')")
 c.execute("INSERT INTO data VALUES ('Jean-Louis', 'Porilo')")
 """
 
-
-c.execute("INSERT INTO Test1 VALUES ('Pierre-Louis', 'Pierre-Louis')")
+c.execute("INSERT INTO Other VALUES ('Mod1','Rouge')")
+c.execute("INSERT INTO Other VALUES ('Mod2','Bleu')")
+c.execute("INSERT INTO Other VALUES ('Mod3','Vert')")
 
 #Permet de sauvegarder les données
 conn.commit()

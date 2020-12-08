@@ -16,8 +16,11 @@ def selectionSqlAttr(attr1, attr2, table, c, n):
 def projectionSql(attrlist, table,c, n):
     where = " GROUP BY "
     attrs = ""
-    for i in attrlist:
-        attrs += str(i) + " "
+    for i in range(len(attrlist)):
+        if i != len(attrlist)-1:
+            attrs += str(attrlist[i]) + ", "
+        else:
+            attrs += str(attrlist[i]) + " "
     rd.createTempAs("temp"+str(n), rd.selectSql(attrlist, table, where+attrs, c), c)
     tempTable = Expression.Relation("temp"+str(n), c)
     return tempTable
@@ -30,8 +33,11 @@ def joinSql(table, table2, c, n):
 def renameSql(old, new, table, c, n):
     tempTable = Expression.Relation("temp"+str(n), c)
     where = ""
-    sel = rd.selectSql([old.name+" as "+new.name], table.name, where, c)
+    rd.createTempAs("tempRename", rd.selectSql("*", table.name, where, c), c)
+    rd.modifAttr("tempRename", "RENAME COLUMN", old.name+" to "+new.name, c)
+    sel = rd.selectSql("*", "tempRename", where, c)
     rd.createTempAs("temp"+str(n), sel, c)
+    c.execute("DROP TABLE tempRename")
     return tempTable
 
 def unionSql(table, table2, c, n):
