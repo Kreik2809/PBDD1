@@ -17,12 +17,12 @@ flag = []
 expr = ui.analyseInput(s, expression, 0, flag, c)
 print("Expression : " + str(expr))
 #print(type(res.param1))
-#try :
-expr.validation()
-#res = expr.compute()
-#print(sql.afficher(res, expr.c))
+try :
+    expr.validation()
+    res = expr.compute()
+    print(sql.afficher(res, expr.c))
 
-#except Exception as e:
-#print("Veuillez corriger votre expression.")
+except Exception as e:
+    print("Veuillez corriger votre expression.")
 
 conn.close()
