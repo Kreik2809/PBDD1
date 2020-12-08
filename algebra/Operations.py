@@ -1,4 +1,5 @@
 import Expression
+import reqDefs as sql
 
 def isEquals(l1,l2, expr):
     """
@@ -116,11 +117,9 @@ class Proj(Expression.Operation):
         self.symbol = "π"
     
     def op(self, param1, param2):
-        s = "projection de : "
-        for elem in param1.liste:
-            s = s + str(elem) + ", "
-        s = s + " sur la relation : " + str(param2)
-        return s
+        print("On effectue la projection")
+        return sql.projectionSql(self.param1.liste, self.param2, self.c)
+
 
     def verif(self, param1, param2):
         #On doit vérifier que tous les attributs présent dans la liste param1 existent dans le schéma de param2
