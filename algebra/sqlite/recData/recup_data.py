@@ -89,7 +89,7 @@ def selectSql(attrs, table, where, c):
         if len(where) != 0:
             req += " WHERE " + where
         c.execute(req).fetchall()
-        return c.execute(req).fetchall()
+        return req
     except sqlite3.Error as e:
         print("Erreur :\nMéthode selectSql non-exécutée car :\n",e)
 
