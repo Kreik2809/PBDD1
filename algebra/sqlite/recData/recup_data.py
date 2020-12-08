@@ -87,7 +87,7 @@ def selectSql(attrs, table, where, c):
                 req += " "+ str(attrs[i]) + ','
         req += "FROM " + str(table)
         if len(where) != 0:
-            req += " WHERE " + where
+            req += where
         c.execute(req).fetchall()
         return req
     except sqlite3.Error as e:

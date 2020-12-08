@@ -2,36 +2,59 @@ import sqlite.recData.recup_data as rd
 import sqlite3
 import Expression
 
-def selectionSql():
-    pass
+cstTemp = 0
+
+def selectionSqlCst(attr, cst, table, c):
+    tempTable = Expression.Relation("temp"+str(cstTemp), c)
+    rd.createTempAs("temp"+str(cstTemp), rd.selectSql("*", table, " WHERE "+ attr.name + "=" + cst.valeur, c), c)
+    int(cstTemp) += 1
+    return tempTable
+
+def selectionSqlAttr(attr1, attr2, table, c):
+    tempTable = Expression.Relation("temp"+str(cstTemp), c)
+    rd.createTempAs("temp"+str(cstTemp), rd.selectSql("*", table, " WHERE "+ attr1.name + "=" + attr2.name, c), c)
+    int(cstTemp) += 1
+    return tempTable
 
 def projectionSql(attrlist, table,c):
-    where = ""
+    where = " GROUP BY "
     attrs = ""
     for i in attrlist:
         attrs += str(i) + " "
-    tempTable = Expression.Relation("temp", c)
-    rd.createTempAs("temp", rd.selectSql(attrlist, table, where, c), c)
+    tempTable = Expression.Relation("temp"+str(cstTemp), c)
+    rd.createTempAs("temp"+str(cstTemp), rd.selectSql(attrlist, table, where+attrs, c), c)
+    int(cstTemp) += 1
     return tempTable
 
 def joinSql(table, table2, c):
-    req = (rd.createTempAs("temp", rd.selectSql("*", table + " Natural Join " + table2, "", c), c))
-    return req
+    tempTable = Expression.Relation("temp"+str(cstTemp), c)
+    rd.createTempAs("temp"+str(cstTemp), rd.selectSql("*", table.name + " Natural Join " + table2.name, "", c), c)
+    int(cstTemp) += 1
+    return tempTable
 
 def renameSql(old, new, table, c):
+    tempTable = Expression.Relation("temp"+str(cstTemp), c)
     where = ""
-    sel = rd.selectSql([old+" as "+new], table, where, c)
-    return (rd.createTempAs("temp", sel, c))
+    sel = rd.selectSql([old.name+" as "+new.name], table.name, where, c)
+    rd.createTempAs("temp"+str(cstTemp), sel, c)
+    int(cstTemp) += 1
+    return tempTable
 
 def unionSql(table, table2, c):
-    sel1 = rd.selectSql("*", table, "", c)
-    sel2 = rd.selectSql("*", table2, "", c)
-    return (rd.createTempAs("temp", sel1 + " UNION " + sel2, c))
+    tempTable = Expression.Relation("temp"+str(cstTemp), c)
+    sel1 = rd.selectSql("*", table.name, "", c)
+    sel2 = rd.selectSql("*", table2.name, "", c)
+    rd.createTempAs("temp"+str(cstTemp), sel1 + " UNION " + sel2, c)
+    int(cstTemp) += 1
+    return tempTable
 
 def diffSql(table, table2, c):
-    sel1 = rd.selectSql("*", table, "", c)
-    sel2 = rd.selectSql("*", table2, "", c)
-    return (rd.createTempAs("temp", sel1 + " EXCEPT " + sel2, c))
+    tempTable = Expression.Relation("temp"+str(cstTemp), c)
+    sel1 = rd.selectSql("*", table.name, "", c)
+    sel2 = rd.selectSql("*", table2.name, "", c)
+    rd.createTempAs("temp"+str(cstTemp), sel1 + " EXCEPT " + sel2, c)
+    int(cstTemp) += 1
+    return tempTable
 
 def afficher(table, c):
     return (c.execute("SELECT * FROM "+ str(table)).fetchall())
