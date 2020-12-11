@@ -84,8 +84,10 @@ c.execute("INSERT INTO VILLES VALUES (2004,'Athènes')")
 c.execute("INSERT INTO VILLES VALUES (2000,'Sydney')")
 c.execute("INSERT INTO VILLES VALUES (2008,'Athènes')")
 c.execute("INSERT INTO VILLES VALUES (2012,'Londre')")
-
 """
+
+
+
 
 #Permet de sauvegarder les données
 conn.commit()
