@@ -43,14 +43,20 @@ def renameSql(old, new, table, c, n):
 def unionSql(table, table2, c, n):
     tempTable = Expression.Relation("temp"+str(n), c)
     sel1 = rd.selectSql("*", table.name, "", c)
-    sel2 = rd.selectSql("*", table2.name, "", c)
+    colstab = rd.getColAndTypes(table.name, c)
+    cols = ""
+    for i in range(len(colstab)):
+        if i != len(colstab)-1:
+            cols += colstab[i][0] + ", "
+        else:
+            cols += colstab[i][0] + " "
+    sel2 = "SELECT "+ cols + " FROM " + table2.name
     rd.createTempAs("temp"+str(n), sel1 + " UNION " + sel2, c)
     return tempTable
 
 def diffSql(table, table2, c, n):
     tempTable = Expression.Relation("temp"+str(n), c)
     sel1 = rd.selectSql("*", table.name, "", c)
-
     colstab = rd.getColAndTypes(table.name, c)
     cols = ""
     for i in range(len(colstab)):
