@@ -7,23 +7,28 @@ def isEquals(l1,l2, expr):
     Elle prend également l'expression sur laquelle on effectue cette vérification
     Elle retourne True si les deux listes sont identiques et False sinon. 
     """
+    print(l1)
+    print(l2)
+
     if (len(l1) != len(l2)):
         print("Expression invalide.")
         print(str(expr) + " : le nombres d'attributs de " + str(expr.param1) + " et de " + str(expr.param2) + " sont différents.")
         return False
     else:
-        for i in range(len(l1)):
-            if (l1[i][0] != l2[i][0]):
+        for elem in l1:
+            if elem not in l2:
                 print("Expression invalide.")
-                print("Les schémas sur laquelle on applique l'expression : " + str(expr) + " ne sont pas identiques.")
-                print("L'attribut : " + l1[i][0] + " situé dans le schéma : " + str(expr.param1) + " n'existe pas dans le schéma de : " + str(expr.param2) +".")
+                print("Les schémas sur lesquels on applique l'expression : " + str(expr) + " ne sont pas identiques.")
+                print("L'attribut : " + str(elem) + " situé dans le schéma : " + str(expr.param1) + " n'existe pas dans le schéma de : " + str(expr.param2) +".")
                 return False
-            elif (l1[i][1] != l2[i][1]):
+        for elem in l2:
+            if elem not in l1:
                 print("Expression invalide.")
-                print("Les schémas sur laquelle on applique l'expression : " + str(expr) + " ne sont pas identiques.")
-                print("Le type de l'attribut : " + l1[i][0] + " est différent dans les deux sous expressions de " + str(expr) +".")
+                print("Les schémas sur lesquels on applique l'expression : " + str(expr) + " ne sont pas identiques.")
+                print("L'attribut : " + str(elem) + " situé dans le schéma : " + str(expr.param2) + " n'existe pas dans le schéma de : " + str(expr.param1) +".")
                 return False
         return True
+
 
 
 class Selection(Expression.Operation):
@@ -52,7 +57,7 @@ class Selection(Expression.Operation):
         if isinstance(self.attr, Expression.Cst):
             return sql.selectionSqlCst(param1, self.attr, param2, self.c, Expression.Operation.number)
         else:
-            return sql.selectionSqlAttr(param1, self.attr, param2, self.c, self.number)
+            return sql.selectionSqlAttr(param1, self.attr, param2, self.c, Expression.Operation.number)
 
     def verif(self, param1, param2):
         #On doit vérifier que param1 et attr existent dans le schéma de param2.

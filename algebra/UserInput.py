@@ -217,6 +217,7 @@ def analyseRename(text, expression, count,flag, c):
     Syntaxe attendue : 
         -exemple1 : Rename(oldName,newName,Rel(name))
     """
+    print("hey")
     flag.append(False)
     newAttr = None
     param1 = None

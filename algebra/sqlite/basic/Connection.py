@@ -4,36 +4,80 @@ conn = sqlite3.connect('../database.db')
 
 c = conn.cursor()
 
-c.execute('''CREATE TABLE Other (Modele text, Couleur text)''')
+#c.execute('''CREATE TABLE Test1 (Name text, Name2 text)''')
 
 #c.execute('''CREATE TABLE Test2 (Name text, Name3 text)''')
 
 #c.execute('''CREATE TABLE data (prenom varchar(255), nom text)''')
 
 """
-c.execute('''CREATE TABLE Cities (Name text, Country text, Population float)''')
+#Table Q1
+c.execute('''CREATE TABLE CITIES (Name text, Country text, Population float)''')
 
-c.execute("INSERT INTO Cities VALUES ('Bergen','Belgium',20.3)")
-c.execute("INSERT INTO Cities VALUES ('Bergen','Norway',30.5)")
-c.execute("INSERT INTO Cities VALUES ('Brussels','Belgium',370.6)")
-
-
-c.execute('''CREATE TABLE Countries (Name text, Capital text, Population float, Currency text)''')
-
-c.execute("INSERT INTO Countries VALUES ('Belgium','Brussels',10255.6,'EUR')")
-c.execute("INSERT INTO Countries VALUES ('Norway','Oslo',4463.2,'NOK')")
-c.execute("INSERT INTO Countries VALUES ('Japan','Tokyo',128888.0,'YEN')")
+c.execute("INSERT INTO CITIES VALUES ('Bergen','Belgium',20.3)")
+c.execute("INSERT INTO CITIES VALUES ('Bergen','Norway',30.5)")
+c.execute("INSERT INTO CITIES VALUES ('Brussels','Belgium',370.6)")
 
 
+c.execute('''CREATE TABLE COUNTRIES (Name text, Capital text, Population float, Currency text)''')
 
-c.execute("INSERT INTO data VALUES ('Pierre-Louis', 'Dagostino')")
-c.execute("INSERT INTO data VALUES ('Nicolas', 'Sournac')")
-c.execute("INSERT INTO data VALUES ('Jean-Louis', 'Porilo')")
+c.execute("INSERT INTO COUNTRIES VALUES ('Belgium','Brussels',10255.6,'EUR')")
+c.execute("INSERT INTO COUNTRIES VALUES ('Norway','Oslo',4463.2,'NOK')")
+c.execute("INSERT INTO COUNTRIES VALUES ('Japan','Tokyo',128888.0,'YEN')")
+
+#Table Q9
+c.execute('''CREATE TABLE NAT (Année float, Athlète text, Pays text)''')
+
+c.execute("INSERT INTO NAT VALUES (2004,'M. Phelps','USA')")
+c.execute("INSERT INTO NAT VALUES (2004,'T. Yamamoto','JAP')")
+c.execute("INSERT INTO NAT VALUES (2004,'S Parry','GBR')")
+c.execute("INSERT INTO NAT VALUES (2000,'I. de Bruijn','NED')")
+c.execute("INSERT INTO NAT VALUES (2000,'M. Phelps','GBR')")
+
+
+#Table Q5
+c.execute('''CREATE TABLE PODIUM (Année float, GP text, Vainqueur text, Deuxième text, Troisième text)''')
+
+c.execute("INSERT INTO PODIUM VALUES (2001,'Belgique','M. Schumacher', 'J. Trulli', 'R. Barrichello')")
+c.execute("INSERT INTO PODIUM VALUES (2003,'Espagne','M. Schumacher', 'F. Alonso', 'R. Barrichello')")
+c.execute("INSERT INTO PODIUM VALUES (2003,'Belgique','G. Fisichella', 'K. Räikkönen', 'F. Alonso')")
+
+c.execute('''CREATE TABLE AFFILIATION (Année float, Pilote text, Ecurie text)''')
+
+c.execute("INSERT INTO AFFILIATION VALUES (2001,'M. Schumacher', 'Ferrari')")
+c.execute("INSERT INTO AFFILIATION VALUES (2001,'R. Barrichello', 'Ferrari')")
+c.execute("INSERT INTO AFFILIATION VALUES (2001,'J. Trulli', 'Jordan')")
+c.execute("INSERT INTO AFFILIATION VALUES (2001,'G. Fisichella', 'Benetton')")
+c.execute("INSERT INTO AFFILIATION VALUES (2001,'M. Häkkinen', 'McLaren')")
+
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'M. Schumacher', 'Ferrari')")
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'R. Barrichello', 'Ferrari')")
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'J. Trulli', 'Renault')")
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'F. Alonso', 'Renault')")
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'G. Fisichella', 'Jordan')")
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'K. Räikkönen', 'Jordan')")
+
+c.execute('''CREATE TABLE PARTICIPATIONS (Année float, Pilote text, GP text)''')
+
+c.execute("INSERT INTO AFFILIATION VALUES (2001,'M. Schumacher', 'Belgique')")
+c.execute("INSERT INTO AFFILIATION VALUES (2001,'R. Barrichello', 'Belgique')")
+c.execute("INSERT INTO AFFILIATION VALUES (2001,'J. Trulli', 'Belgique')")
+c.execute("INSERT INTO AFFILIATION VALUES (2001,'G. Fisichella', 'Belgique')")
+
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'M. Schumacher', 'Espagne')")
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'R. Barrichello', 'Espagne')")
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'F. Alonso', 'Espagne')")
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'G. Fisichella', 'Espagne')")
+
+
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'M. Schumacher', 'Belgique')")
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'R. Barrichello', 'Belgique')")
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'J. Trulli', 'Belgique')")
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'F. Alonso', 'Belgique')")
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'G. Fisichella', 'Belgique')")
+c.execute("INSERT INTO AFFILIATION VALUES (2003,'K. Räikkönen', 'Belgique')")
+
 """
-
-c.execute("INSERT INTO Other VALUES ('Mod1','Rouge')")
-c.execute("INSERT INTO Other VALUES ('Mod2','Bleu')")
-c.execute("INSERT INTO Other VALUES ('Mod3','Vert')")
 
 #Permet de sauvegarder les données
 conn.commit()
