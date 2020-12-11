@@ -51,8 +51,11 @@ class Selection(Expression.Operation):
         self.symbol = "σ"
     
     def op(self, param1, param2):
+        """
+        Effectue l'opération de sélection en sql.
+        Retourne un objet de type Relation qui pointe vers la table temporaire nouvellement créée.
+        """
         print("on effectue la sélection")
-        print(param2)
         Expression.Operation.number += 1
         if isinstance(self.attr, Expression.Cst):
             return sql.selectionSqlCst(param1, self.attr, param2, self.c, Expression.Operation.number)
@@ -128,6 +131,10 @@ class Proj(Expression.Operation):
         self.symbol = "π"
     
     def op(self, param1, param2):
+        """
+        Effectue l'opération de projection en sql.
+        Retourne un objet de type Relation qui pointe vers la table temporaire nouvellement créée.
+        """
         print("On effectue la projection")
         Expression.Operation.number += 1
         return sql.projectionSql(param1.liste, param2, self.c, Expression.Operation.number)
@@ -182,6 +189,10 @@ class Join(Expression.Operation):
         self.symbol = "x"
     
     def op(self, param1, param2):
+        """
+        Effectue l'opération de jointure en sql.
+        Retourne un objet de type Relation qui pointe vers la table temporaire nouvellement créée.
+        """
         print("on effectue la jointure")
         Expression.Operation.number += 1
         return sql.joinSql(param1,param2,self.c, Expression.Operation.number)
@@ -229,6 +240,10 @@ class Rename(Expression.Operation):
         self.symbol = "φ"
 
     def op(self, param1, param2):
+        """
+        Effectue l'opération de renommage en sql.
+        Retourne un objet de type Relation qui pointe vers la table temporaire nouvellement créée.
+        """
         print("on effectue le renommage")
         Expression.Operation.number += 1
         return sql.renameSql(param1, self.newAttr, param2, self.c, Expression.Operation.number)
@@ -273,6 +288,10 @@ class Union(Expression.Operation):
         self.symbol = "U"
     
     def op(self, param1, param2):
+        """
+        Effectue l'opération d'union en sql.
+        Retourne un objet de type Relation qui pointe vers la table temporaire nouvellement créée.
+        """
         print("on effectue l'union")
         Expression.Operation.number+=1
         return sql.unionSql(param1,param2,self.c, Expression.Operation.number)
@@ -315,6 +334,10 @@ class Diff(Expression.Operation):
         self.symbol = "-"
 
     def op(self, param1, param2):
+        """
+        Effectue l'opération de différence en sql.
+        Retourne un objet de type Relation qui pointe vers la table temporaire nouvellement créée.
+        """
         print("on effectue la différence")
         Expression.Operation.number+=1
         return sql.diffSql(param1,param2,self.c, Expression.Operation.number)

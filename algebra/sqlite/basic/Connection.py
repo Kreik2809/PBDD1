@@ -59,23 +59,31 @@ c.execute("INSERT INTO AFFILIATION VALUES (2003,'K. Räikkönen', 'Jordan')")
 
 c.execute('''CREATE TABLE PARTICIPATIONS (Année float, Pilote text, GP text)''')
 
-c.execute("INSERT INTO AFFILIATION VALUES (2001,'M. Schumacher', 'Belgique')")
-c.execute("INSERT INTO AFFILIATION VALUES (2001,'R. Barrichello', 'Belgique')")
-c.execute("INSERT INTO AFFILIATION VALUES (2001,'J. Trulli', 'Belgique')")
-c.execute("INSERT INTO AFFILIATION VALUES (2001,'G. Fisichella', 'Belgique')")
+c.execute("INSERT INTO PARTICIPATIONS VALUES (2001,'M. Schumacher', 'Belgique')")
+c.execute("INSERT INTO PARTICIPATIONS VALUES (2001,'R. Barrichello', 'Belgique')")
+c.execute("INSERT INTO PARTICIPATIONS VALUES (2001,'J. Trulli', 'Belgique')")
+c.execute("INSERT INTO PARTICIPATIONS VALUES (2001,'G. Fisichella', 'Belgique')")
 
-c.execute("INSERT INTO AFFILIATION VALUES (2003,'M. Schumacher', 'Espagne')")
-c.execute("INSERT INTO AFFILIATION VALUES (2003,'R. Barrichello', 'Espagne')")
-c.execute("INSERT INTO AFFILIATION VALUES (2003,'F. Alonso', 'Espagne')")
-c.execute("INSERT INTO AFFILIATION VALUES (2003,'G. Fisichella', 'Espagne')")
+c.execute("INSERT INTO PARTICIPATIONS VALUES (2003,'M. Schumacher', 'Espagne')")
+c.execute("INSERT INTO PARTICIPATIONS VALUES (2003,'R. Barrichello', 'Espagne')")
+c.execute("INSERT INTO PARTICIPATIONS VALUES (2003,'F. Alonso', 'Espagne')")
+c.execute("INSERT INTO PARTICIPATIONS VALUES (2003,'G. Fisichella', 'Espagne')")
 
 
-c.execute("INSERT INTO AFFILIATION VALUES (2003,'M. Schumacher', 'Belgique')")
-c.execute("INSERT INTO AFFILIATION VALUES (2003,'R. Barrichello', 'Belgique')")
-c.execute("INSERT INTO AFFILIATION VALUES (2003,'J. Trulli', 'Belgique')")
-c.execute("INSERT INTO AFFILIATION VALUES (2003,'F. Alonso', 'Belgique')")
-c.execute("INSERT INTO AFFILIATION VALUES (2003,'G. Fisichella', 'Belgique')")
-c.execute("INSERT INTO AFFILIATION VALUES (2003,'K. Räikkönen', 'Belgique')")
+c.execute("INSERT INTO PARTICIPATIONS VALUES (2003,'M. Schumacher', 'Belgique')")
+c.execute("INSERT INTO PARTICIPATIONS VALUES (2003,'R. Barrichello', 'Belgique')")
+c.execute("INSERT INTO PARTICIPATIONS VALUES (2003,'J. Trulli', 'Belgique')")
+c.execute("INSERT INTO PARTICIPATIONS VALUES (2003,'F. Alonso', 'Belgique')")
+c.execute("INSERT INTO PARTICIPATIONS VALUES (2003,'G. Fisichella', 'Belgique')")
+c.execute("INSERT INTO PARTICIPATIONS VALUES (2003,'K. Räikkönen', 'Belgique')")
+
+
+#Table Q9
+c.execute('''CREATE TABLE VILLES (Année float, Ville text)''')
+c.execute("INSERT INTO VILLES VALUES (2004,'Athènes')")
+c.execute("INSERT INTO VILLES VALUES (2000,'Sydney')")
+c.execute("INSERT INTO VILLES VALUES (2008,'Athènes')")
+c.execute("INSERT INTO VILLES VALUES (2012,'Londre')")
 
 """
 
