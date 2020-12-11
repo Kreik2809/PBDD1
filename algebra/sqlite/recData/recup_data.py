@@ -167,6 +167,7 @@ def createTempAs(name, select, c):
     try:
         if select != "":
             req = "CREATE TEMP TABLE IF NOT EXISTS " + str(name) + " AS " + str(select)
+            print(req)
             c.execute(req)
             return req
     except sqlite3.Error as e:

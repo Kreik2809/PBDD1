@@ -17,7 +17,7 @@ Join(Proj([Année,Pilote],Rel(PARTICIPATIONS));Proj([Année,Pilote],Rel(AFFILIAT
 Exemple de réponse aux questions :
 
 Q19)
-Diff(Join(Proj([Année,GP],Rel(PARTICIPATIONs));Proj([Année,Pilote],Rel(AFFILIATION)));Rel(PARTICIPATIONS)) : BUG DIFF A REGLER
+Diff(Join(Proj([Année,GP],Rel(PARTICIPATIONs));Proj([Année,Pilote],Rel(AFFILIATION)));Rel(PARTICIPATIONS))
 
 Q20)
 Proj([GP,Année],Join(Join(Rename(Pilote,Vainqueur,Rel(AFFILIATION));Rel(PODIUM));Join(Rename(Pilote,Deuxième,Rel(AFFILIATION));Rel(PODIUM))
