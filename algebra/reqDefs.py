@@ -70,7 +70,18 @@ def diffSql(table, table2, c, n):
     return tempTable
 
 def afficher(table, c):
-    return (c.execute("SELECT * FROM "+ str(table)).fetchall())
+    counter = 0
+    print('_'*100+"\n")
+    print(' '*44+"RESULTATS"+" "*47)
+    print('_'*100+"\n")
+    print('Attributs : {}'.format(rd.getColAndTypes(table.name,c))+"\n")
+    for row in c.execute("SELECT * FROM "+ str(table)):
+        if counter < 10:
+            print(" "*2+"Ligne "+str(counter)+" : "+str(row))
+        else:
+            print(" "*2+"Ligne "+str(counter)+": "+str(row))
+        counter += 1
+    return ""
 
 #c.execute('''CREATE TEMP TABLE test (Name TEXT, Voorname TEXT, Denom TEXT, Chiffre REAL)''')
 

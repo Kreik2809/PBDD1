@@ -11,6 +11,7 @@ s = ui.readInput()
 expression = None
 flag = []
 expr = ui.analyseInput(s, expression, 0, flag, c)
+print("\n")
 print("Expression : " + str(expr))
 try :
     expr.validation()
